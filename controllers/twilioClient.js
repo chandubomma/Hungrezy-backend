@@ -22,24 +22,25 @@ const createNewOTPService = (friendlyName)=>{
 
 // sendOTP return status pending after sending OTP the user mobile.
 
-const sendOTP = (mobileNumber)=>{
-    let verificationStatus;
-    client.verify.v2.services(serviceId)
-                .verifications
-                .create({to: mobileNumber, channel: 'sms'})             // mobile number should be string, format : '+917636888212'
-                .then(verification => verificationStatus=verification.status);    // change channel for whatsapp or voice verifications.
-    return verificationStatus;
+const sendOTP = async (mobileNumber)=>{
+    
+    const verification = await client.verify.v2.services(serviceId)
+        .verifications
+        .create({ to: mobileNumber, channel: 'sms' }) // mobile number should be string, format : '+917636888212'
+
+    return verification.status;    // change channel for whatsapp or voice verifications.
+    
 }
 
 // verifyOTP returns status approved upon successfull OTP verification.
 
-const verifyOTP = (userEnteredOTP,mobileNumber)=>{
-    let verificationStatus;
-    client.verify.v2.services(serviceId)
-                .verificationChecks
-                .create({to: mobileNumber, code: userEnteredOTP})
-                .then(verification_check => verificationStatus=verification_check.status);
-    return verificationStatus;
+const verifyOTP = async (userEnteredOTP,mobileNumber)=>{
+    
+    const verification_check = await client.verify.v2.services(serviceId)
+        .verificationChecks
+        .create({ to: mobileNumber, code: userEnteredOTP });
+
+    return verification_check.status;
 }
 
 export {createNewOTPService,sendOTP,verifyOTP}
