@@ -58,4 +58,29 @@ function getValue(data, keyAtLevel1, keyAtLevel2) {
     return null;
 }
 
+
+// Get all keys at Level 1 and Level 2
+router.get('/getAllKeys', (req, res) => {
+    try {
+        const keysAtLevel1 = Object.keys(jsonData);
+        const keysAtLevel2 = {};
+
+        keysAtLevel1.forEach((key1) => {
+            const keysAtLevel2Array = Object.keys(jsonData[key1]);
+            keysAtLevel2[key1] = keysAtLevel2Array;
+        });
+
+        const result = {
+            keysAtLevel1,
+            keysAtLevel2,
+        };
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Error processing keys.' });
+    }
+});
+
+
 export default router;
