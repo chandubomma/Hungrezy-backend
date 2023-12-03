@@ -8,17 +8,18 @@ router.post("/signup", (req, res) => {});
 // Sign-in route
 router.post("/signin", (req, res) => {});
 
-router.post("/signin/sendOTP", (req, res) => {
-  const mobileNumber = req.body.mobileNumber;
+router.post("/sendOTP", (req, res) => {
+  let mobileNumber = req.body.mobileNumber;
+  mobileNumber = '+91'+mobileNumber
   sendOTP(mobileNumber).then((status) => {
     console.log(status);
     return res.json({ status });
   });
 });
 
-router.post("/signin/verifyOTP", (req, res) => {
+router.post("/verifyOTP", (req, res) => {
   const OTP = req.body.OTP;
-  const mobileNumber = req.body.mobileNumber;
+  const mobileNumber = '+91'+req.body.mobileNumber;
   verifyOTP(OTP, mobileNumber).then((status) => {
     console.log(status);
     return res.json({ status });
