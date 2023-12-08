@@ -9,6 +9,7 @@ import connectDB from "./db/connectDB.js"
 import restaurant from './routes/restaurant.js'
 
 
+
 const app = express();
 app.use(cors());
 
