@@ -50,7 +50,7 @@ router.post('/signin', async (req, res) => {
 
     // If passwords match, return success, otherwise return authentication failure
     if (passwordMatch) {
-      return res.status(200).json({ message: 'Authentication successful' });
+      return res.status(200).json({user});
     } else {
       return res.status(401).json({ error: 'Authentication failed. Incorrect password.' });
     }
