@@ -5,6 +5,7 @@ import express from "express";
 import cors  from 'cors';
 import bodyParser from "body-parser";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js"
 import connectDB from "./db/connectDB.js"
 import restaurant from './routes/restaurant.js'
 
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 app.use('/restaurants', restaurant);
 
 const port = process.env.PORT || 3000;
