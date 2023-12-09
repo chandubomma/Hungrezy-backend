@@ -1,7 +1,5 @@
 import { Schema, model } from "mongoose";
 
-
-
 const userSchema = new Schema({
   mobileNumber: {
     type: String,
@@ -25,6 +23,4 @@ const userSchema = new Schema({
   },
 });
 
-const User = model('User', userSchema);
-
-module.exports = User;
+export default model('User', userSchema);

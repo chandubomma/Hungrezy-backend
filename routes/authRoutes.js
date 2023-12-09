@@ -1,7 +1,8 @@
 import { sendOTP, verifyOTP } from "../controllers/twilioClient.js";
 import express from "express";
-import User from '../models/User.js';
 import bcrypt from 'bcrypt';
+import User from '../models/User.js';
+
 
 const router = express.Router();
 
@@ -75,6 +76,26 @@ router.post("/verifyOTP", (req, res) => {
     console.log(status);
     return res.json({ status });
   });
+});
+
+
+// Check user existence route
+router.get('/checkUser/:mobileNumber', async (req, res) => {
+  try {
+    const { mobileNumber } = req.params;
+    const user = await User.findOne({ mobileNumber });
+
+    if (user) {
+      // User found, return user data
+      res.status(200).json({ user });
+    } else {
+      // User not found
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 export default router;
