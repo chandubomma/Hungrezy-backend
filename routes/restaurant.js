@@ -10,7 +10,7 @@ let jsonData; // Variable to store the loaded JSON data
 // Load JSON data when the server starts
 const currentFileURL = import.meta.url;
 const currentDir = path.dirname(fileURLToPath(currentFileURL));
-const filePath = path.join(currentDir, '..', 'files', 'top_cities.json');
+const filePath = path.join(currentDir, '..', 'files', 'minified_top_cities.json');
 
 try {
     const stream = fs.createReadStream(filePath, { encoding: 'utf8' });
