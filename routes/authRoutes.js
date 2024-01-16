@@ -2,6 +2,7 @@ import { sendOTP, verifyOTP } from "../controllers/twilioClient.js";
 import express from "express";
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
+import { sendVerificationCode, verifyRegistration } from '../controllers/verificationController.js';
 
 
 const router = express.Router();
@@ -97,5 +98,8 @@ router.get('/checkUser/:mobileNumber', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+router.post('/restaurant/send-verification-code', sendVerificationCode);
+router.post('/restaurant/verify-registration', verifyRegistration);
 
 export default router;

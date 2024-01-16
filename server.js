@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js"
 import connectDB from "./db/connectDB.js"
 import restaurant from './routes/restaurant.js'
+import path from 'path';
 
 
 
@@ -18,7 +19,14 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/auth', authRoutes);
+// Use import.meta.url to derive __dirname
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
+
+// Set up static files middleware
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/restaurants', restaurant);
 
