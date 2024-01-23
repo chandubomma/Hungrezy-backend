@@ -1,10 +1,10 @@
 import randomstring from 'randomstring';
-import { sendVerificationEmail } from '../services/emailService.js';
+import { emailService } from '../services';
 
 // Dummy data store for restaurant registration (replace this with a database)
-const registeredRestaurants = [];
+const users = [];
 
-export const sendVerificationCode = (req, res) => {
+const sendVerificationCode = (req, res) => {
   const { email } = req.body;
 
   // Generate a 6-digit verification code
@@ -14,19 +14,19 @@ export const sendVerificationCode = (req, res) => {
   });
 
   // Store the verification code for later verification
-  registeredRestaurants.push({ email, verificationCode });
+  users.push({ email, verificationCode });
 
   // Send verification code via email
-  sendVerificationEmail(email, verificationCode);
+  emailService.sendVerificationEmail(email, verificationCode);
 
   res.json({ message: 'Verification code sent successfully.' });
 };
 
-export const verifyRegistration = (req, res) => {
+const verifyCode = (req, res) => {
   const { email, verificationCode } = req.body;
 
   // Find the stored verification code for the given email
-  const storedCode = registeredRestaurants.find((entry) => entry.email === email)?.verificationCode;
+  const storedCode = users.find((entry) => entry.email === email)?.verificationCode;
 
   if (storedCode && storedCode === verificationCode) {
     res.json({ message: 'Verification successful!' });
@@ -34,3 +34,9 @@ export const verifyRegistration = (req, res) => {
     res.status(401).json({ error: 'Invalid verification code.' });
   }
 };
+
+
+export {
+  sendVerificationCode,
+  verifyCode,
+}
