@@ -1,11 +1,10 @@
-import dotenv from "dotenv";
-dotenv.config();
+import { PORT } from "./config/index.js";
 import {} from "express-async-errors";
 import express from "express";
 import cors  from 'cors';
 import bodyParser from "body-parser";
 import connectDB from "./db/connectDB.js"
-import initRoutes from "./routes";
+import initRoutes from "./routes/index.js";
 import path from 'path';
 import morgan from 'morgan';
 
@@ -28,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api',initRoutes());
 
-const port = process.env.PORT || 3000;
+const port = PORT || 3000;
 
 const start = async () => {
   try {

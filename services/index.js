@@ -1,5 +1,5 @@
-import * as authService from './authService';
-import * as emailService from './emailService';
+import * as authService from './authService.js';
+import * as emailService from './emailService.js';
 
 export {
     emailService,

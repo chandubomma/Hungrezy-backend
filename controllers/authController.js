@@ -1,4 +1,4 @@
-import {authService} from '../services'
+import {authService} from '../services/index.js'
 
 const TAG = 'controller.auth';
 

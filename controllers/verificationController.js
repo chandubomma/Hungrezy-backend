@@ -1,42 +1,42 @@
-import randomstring from 'randomstring';
-import { emailService } from '../services';
+import {UserVerification} from '../models/index.js';
+import { emailService } from '../services/index.js';
+import { passwordUtils } from '../utils/index.js';
 
-// Dummy data store for restaurant registration (replace this with a database)
-const users = [];
 
-const sendVerificationCode = (req, res) => {
-  const { email } = req.body;
-
-  // Generate a 6-digit verification code
-  const verificationCode = randomstring.generate({
-    length: 6,
-    charset: 'numeric',
-  });
-
-  // Store the verification code for later verification
-  users.push({ email, verificationCode });
-
-  // Send verification code via email
-  emailService.sendVerificationEmail(email, verificationCode);
-
-  res.json({ message: 'Verification code sent successfully.' });
-};
-
-const verifyCode = (req, res) => {
-  const { email, verificationCode } = req.body;
-
-  // Find the stored verification code for the given email
-  const storedCode = users.find((entry) => entry.email === email)?.verificationCode;
-
-  if (storedCode && storedCode === verificationCode) {
-    res.json({ message: 'Verification successful!' });
-  } else {
-    res.status(401).json({ error: 'Invalid verification code.' });
+const sendVerificationCode = async (req, res) => {
+  const { email, user_role } = req.body;
+  const verificationCode = passwordUtils.generateRandomOTP(6);
+  try {
+    let userVerification = await UserVerification.findOne({ email, user_role });
+    if (userVerification) {
+      userVerification.otp = verificationCode;
+    } else {
+      userVerification = new UserVerification({ email, user_role, otp: verificationCode });
+    }
+    await userVerification.save();
+    await emailService.sendVerificationEmail(email, verificationCode);
+    res.status(200).json({ message: 'Verification code sent successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
 
-export {
-  sendVerificationCode,
-  verifyCode,
-}
+
+const verifyCode = async (req, res) => {
+  const { email, verificationCode } = req.body;
+  try {
+    const userVerification = await UserVerification.findOne({ email});
+    if (userVerification && userVerification.otp === verificationCode) {
+      res.status(200).json({ message: 'Verification successful!' });
+    } else {
+      res.status(401).json({ error: 'Invalid verification code.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export { sendVerificationCode, verifyCode };

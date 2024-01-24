@@ -1,5 +1,5 @@
-import * as authController from './authController';
-import * as verificationController from './verificationController';
+import * as authController from './authController.js';
+import * as verificationController from './verificationController.js';
 
 
 export {

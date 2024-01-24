@@ -1,57 +1,38 @@
 import nodemailer from 'nodemailer';
-import { EMAILADDRESS,EMAILPASSWORDS } from '../constants/emailAdressConstants.js';
+import { NOTIFICATION_EMAIL,NOTIFICATION_PASSWORD } from '../config/index.js';
 import fs from 'fs';
 
+const createTransport = async(SENDER_EMAIL_ID,SENDER_EMAIL_PASSWORD) => {
+  try {
+     const transport = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: SENDER_EMAIL_ID,
+              pass: SENDER_EMAIL_PASSWORD,
+          },
+      });
+      return transport;
+  } catch (error) {
+      console.error('Error occurred in createTransport()');
+      console.error(error);
+      throw error;
+  }
+}
 
 
-
-// Create a NodeMailer transporter with your email service credentials
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: EMAILADDRESS.Host,
-    pass: EMAILPASSWORDS.Host,
-  },
-});
-
-
-
-const sendVerificationEmail = (email, verificationCode) => {
-  // Create HTML template for the email
-  // const htmlTemplate = `
-  //   <p>Your verification code for Hungrezy Restaurant Registration is: <strong>${verificationCode}</strong></p>
-  // `;
-
-  // Read HTML content from the file
-const htmlContent = fs.readFileSync('public/EmailVerificationTemplate.html', 'utf-8');
-
-  const notificationTransporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: EMAILADDRESS.Notification,
-      pass: EMAILPASSWORDS.Notification,
-    },
-  });
-
+const sendVerificationEmail = async(email, verificationCode) => {
+  const htmlContent = fs.readFileSync('public/EmailVerificationTemplate.html', 'utf-8');
+  const notificationTransporter = await createTransport(NOTIFICATION_EMAIL,NOTIFICATION_PASSWORD);
   const emailContent = htmlContent.replace('{verificationCode}', verificationCode);
-
-  // Set up email options
   const mailOptions = {
-    from: EMAILADDRESS.Notification,
+    from: NOTIFICATION_EMAIL,
     to: email,
     subject: 'Hungrezy Verification Code',
     html: emailContent,
   };
-
-  // Send the email
   notificationTransporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      // Handle error (log, throw, etc.)
-    } else {
-      console.log('Email sent: ' + info.response);
-      // Handle success (log, etc.)
-    }
+    if (error)console.error(error);
+    else console.log('Email sent: ' + info.response);
   });
 };
 

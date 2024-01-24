@@ -1,5 +1,5 @@
-import initAuthRoutes from "./authRoutes";
-import initRestaurantRoutes from "./restaurantRoutes";
+import initAuthRoutes from "./authRoutes.js";
+import initRestaurantRoutes from "./restaurantRoutes.js";
 import express from 'express';
 
 const initRoutes = ()=>{

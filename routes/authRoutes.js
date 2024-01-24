@@ -1,5 +1,5 @@
 import express from 'express'
-import { verificationController } from '../controllers';
+import { verificationController } from '../controllers/index.js';
 
 
 
