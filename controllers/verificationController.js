@@ -1,6 +1,6 @@
 import {UserVerification} from '../models/index.js';
 import { emailService } from '../services/index.js';
-import { passwordUtils } from '../utils/index.js';
+import { passwordUtils,authUtils } from '../utils/index.js';
 
 
 const sendVerificationCode = async (req, res) => {
@@ -15,7 +15,7 @@ const sendVerificationCode = async (req, res) => {
     }
     await userVerification.save();
     await emailService.sendVerificationEmail(email, verificationCode);
-    res.status(200).json({ message: 'Verification code sent successfully.' });
+    res.status(200).json({ message: 'Verification code sent successfully.'});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -29,7 +29,9 @@ const verifyCode = async (req, res) => {
   try {
     const userVerification = await UserVerification.findOne({ email});
     if (userVerification && userVerification.otp === verificationCode) {
-      res.status(200).json({ message: 'Verification successful!' });
+      const payload = {email}
+      const accessToken = await authUtils.generateAccessToken(payload,'1h');
+      res.status(200).json({ message: 'Verification successful!',token : accessToken  });
     } else {
       res.status(401).json({ error: 'Invalid verification code.' });
     }

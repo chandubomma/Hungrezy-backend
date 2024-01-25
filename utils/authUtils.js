@@ -6,7 +6,7 @@ const generateJWT = (payload, secret, expiresIn) => {
     return jsonwebtoken.sign(payload, secret, {expiresIn});
 };
 
-const generateAccessToken = async(payload, expiry = 60 * 60) => {
+const generateAccessToken = async(payload, expiry = '1h') => {
     try {
         return generateJWT(payload, JWT_SECRET, expiry);
     } catch (error) {
@@ -14,7 +14,7 @@ const generateAccessToken = async(payload, expiry = 60 * 60) => {
     }
 }
 
-const generateRefreshToken = async(payload, expiry = 24 * 60 * 60) => {
+const generateRefreshToken = async(payload, expiry = '24h') => {
     try {
         return generateJWT(payload, JWT_REFRESH_SECRET, expiry);
     } catch (error) {
