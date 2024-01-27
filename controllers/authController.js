@@ -4,12 +4,12 @@ const TAG = 'controller.auth';
 
 const signin = async(req,res)=>{
     try {
-        const tokens = await authService.signin(req.body);
-        res.send({
-            status: 200,
-            message: 'Sign in successfully',
+        const result = await authService.signin(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
             showMessage: false,
-            data: tokens,
+            data: result.token,
         });
     } catch (error) {
         console.error(`${TAG} ERROR in signin() => ${error}`);
@@ -18,12 +18,12 @@ const signin = async(req,res)=>{
 
 const signup = async(req,res)=>{
     try {
-        const tokens = await authService.signup(req.body);
-        res.send({
-            status: 200,
-            message: 'Sign up successfully',
+        const result = await authService.signup(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
             showMessage: false,
-            data: tokens,
+            data: result.token,
         });
     } catch (error) {
         console.error(`${TAG} ERROR in signup() => ${error}`);
