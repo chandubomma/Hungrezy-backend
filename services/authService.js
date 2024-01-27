@@ -17,7 +17,7 @@ const signin = async(payload)=>{
                 status: 400,
             }
         }
-        const accessToken = await authUtils.generateAccessToken({user});
+        const accessToken = await authUtils.generateAccessToken({id:user.email,role:'user'});
         const refreshToken = await authUtils.generateRefreshToken({user});
         const token = {}
         token.accessToken = accessToken;
@@ -56,7 +56,7 @@ const signup = async(payload)=>{
             }
             let user = new User(temp)
             await user.save()
-            const accessToken = await authUtils.generateAccessToken({user});
+            const accessToken = await authUtils.generateAccessToken({id:user.email,role:'user'});
             const refreshToken = await authUtils.generateRefreshToken({user});
             const token = {}
             token.accessToken = accessToken;
