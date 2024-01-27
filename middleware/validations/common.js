@@ -1,7 +1,9 @@
 import Joi from 'joi';
 
-const emailValidation = Joi.string().pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).required();
-const passwordValidation = Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).required()
+const emailValidation = Joi.string().pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+const passwordValidation = Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
+const mobileNumberValidation = Joi.string().min(10).max(10).pattern(/^[1-9][0-9]{9}$/);
+
 
 const validate = async (schema, req, res, next) => {
     let body = Object.assign({}, req.params, req.query);
@@ -25,5 +27,6 @@ const validate = async (schema, req, res, next) => {
 export {
     validate,
     emailValidation,
-    passwordValidation
+    passwordValidation,
+    mobileNumberValidation,
 }
