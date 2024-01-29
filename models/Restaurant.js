@@ -11,17 +11,19 @@ const restaurantSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    // You might want to add validation for email format
+  },
+  password: {
+    type: String,
+    required: true,
   },
   image: {
     type: String,
-    // You can add more validation or customization for image links
   },
   rating: {
-    type: String, // You might want to change the type based on the actual data type
+    type: String, 
   },
   rating_count: {
-    type: String, // You might want to change the type based on the actual data type
+    type: String, 
   },
   cost: {
     type: String,
@@ -33,6 +35,12 @@ const restaurantSchema = new Schema({
     type: String,
   },
   lic_no: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  area: {
     type: String,
   },
   menu: {
