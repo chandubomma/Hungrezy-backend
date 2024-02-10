@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api',initRoutes());
 
-const port = PORT || 3000;
+const port = PORT || 5000;
 
 const start = async () => {
   try {
