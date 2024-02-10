@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import connectDB from "./db/connectDB.js"
 import initRoutes from "./routes/index.js";
 import path from 'path';
-import morgan from 'morgan';
+import morgan from 'morgan'
 
 
 
