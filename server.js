@@ -7,6 +7,7 @@ import connectDB from "./db/connectDB.js"
 import initRoutes from "./routes/index.js";
 import path from 'path';
 import morgan from 'morgan';
+import { connectToMongoDB } from "./db/mongoClient.js";
 
 
 
@@ -32,6 +33,7 @@ const port = PORT || 3000;
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
+    await connectToMongoDB();
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );

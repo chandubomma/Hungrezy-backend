@@ -47,6 +47,15 @@ const restaurantSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Menu',
   },
+  isopen: {
+    type: Boolean,
+    default: true, 
+  },
+  status: {
+    type: String,
+    enum: ['approved', 'rejected', 'suspended', 'inprogress'],
+    default: 'inprogress',
+  },
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);

@@ -1,5 +1,7 @@
 import { Restaurant } from "../models/index.js";
 import { dbUtils } from "../utils/index.js";
+import { getAllFoodItems } from "./mongoService.js";
+
 const TAG = 'service.restaurant';
 
 const getRestaurants = async(query)=>{
@@ -62,9 +64,28 @@ const getRestaurantId = async(query)=>{
     }
 }
 
+const getMenu = async(id)=>{
+    if(!id)throw{
+        message : "Id is not provided",
+        status : 400,
+    }
+    try{
+        const ObjectId = dbUtils.stringToObjectId(id);
+        const menu = await getAllFoodItems(ObjectId);
+        return {
+            status : 200,
+            message : 'menu HIT!',
+            data : menu
+        }
+    }catch(error){
+        console.error(`${TAG} ERROR in getMenu() => ${error}`);
+    }
+}
+
 
 export {
     getRestaurants,
     getRestaurantById,
     getRestaurantId,
+    getMenu,
 }

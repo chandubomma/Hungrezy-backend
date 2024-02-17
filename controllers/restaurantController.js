@@ -51,9 +51,32 @@ const getRestaurantId = async(req,res)=>{
     }
 }
 
+const updateRestaurant = async(req,res)=>{
+
+}
+
+
+const getMenu = async(req,res)=>{
+    try{
+        const result = await restaurantService.getMenu(req.params.id);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in getMenu() => ${error.message}`);
+        res.status(error.status).send({
+            error : error.message
+        })
+    }
+}
+
 
 export {
     getRestaurants,
     getRestaurantById,
     getRestaurantId,
+    updateRestaurant,
+    getMenu,
 }
