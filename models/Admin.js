@@ -1,10 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const userSchema = new Schema({
-  mobileNumber: {
-    type: String,
-    required: true,
-  },
+const adminSchema = new Schema({
   firstName: {
     type: String,
     required: true,
@@ -27,10 +23,14 @@ const userSchema = new Schema({
   },
   imageId: {
     type: String,
+  },
+  superAdmin: {
+    type: Boolean,
+    default: false
   } 
 });
 
 
-const User = model("User", userSchema);
+const Admin = model("Admin", adminSchema);
 
-export default User;
+export default Admin;

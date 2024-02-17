@@ -58,9 +58,39 @@ const restaurantSignup = async(req,res)=>{
     }
 }
 
+const adminSignin = async(req,res)=>{
+    try {
+        const result = await authService.adminSignin(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
+            showMessage: false,
+            data: result.token,
+        });
+    } catch (error) {
+        console.error(`${TAG} ERROR in adminSignin() => ${error}`);
+    }
+}
+
+const adminSignup = async(req,res)=>{
+    try {
+        const result = await authService.adminSignup(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
+            showMessage: false,
+            data: result.token,
+        });
+    } catch (error) {
+        console.error(`${TAG} ERROR in adminSignup() => ${error}`);
+    }
+}
+
 export{
     signin,
     signup,
     restaurantSignup,
     restaurantSignin,
+    adminSignin,
+    adminSignup,
 }

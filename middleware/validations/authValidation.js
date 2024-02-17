@@ -22,6 +22,14 @@ const restaurantSignin  = async(req,res,next)=>{
     await validate(schema,req,res,next);
 }
 
+const adminSignin  = async(req,res,next)=>{
+    const schema = Joi.object({
+        email : emailValidation.required(),
+        password : passwordValidation.required(),
+    })
+    await validate(schema,req,res,next);
+}
+
 const signup  = async(req,res,next)=>{
     const schema = Joi.object({
         email : emailValidation.required(),
@@ -44,10 +52,23 @@ const restaurantSignup  = async(req,res,next)=>{
     await validate(schema,req,res,next);
 }
 
+const adminSignup  = async(req,res,next)=>{
+    const schema = Joi.object({
+        email : emailValidation.required(),
+        password : passwordValidation.required(),
+        firstName : Joi.string().required(),
+        lastName : Joi.string().allow(''),
+        accessToken : Joi.string().required(),
+    })
+    await validate(schema,req,res,next);
+}
+
 
 export {
     signin,
     signup,
     restaurantSignup,
-    restaurantSignin
+    restaurantSignin,
+    adminSignin,
+    adminSignup,
 }

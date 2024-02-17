@@ -11,8 +11,8 @@ const initAuthRoutes = ()=>{
   authRoutes.post('/user/signin',validations.signin,authController.signin);
   authRoutes.post('/restaurant/signup',validations.restaurantSignup,authController.restaurantSignup);
   authRoutes.post('/restaurant/signin',validations.restaurantSignin,authController.restaurantSignin);
-
-  // todo : more routes to come.
+  authRoutes.post('/admin/signup',validations.adminSignup,authController.adminSignup);
+  authRoutes.post('/admin/signin',validations.adminSignin,authController.adminSignin);
 
   return authRoutes;
 }
