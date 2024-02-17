@@ -9,6 +9,8 @@ const initAuthRoutes = ()=>{
   authRoutes.post('/verify-code', verificationController.verifyCode);
   authRoutes.post('/user/signup',validations.signup,authController.signup);
   authRoutes.post('/user/signin',validations.signin,authController.signin);
+  authRoutes.post('/restaurant/signup',validations.restaurantSignup,authController.restaurantSignup);
+  authRoutes.post('/restaurant/signin',validations.restaurantSignin,authController.restaurantSignin);
 
   // todo : more routes to come.
 

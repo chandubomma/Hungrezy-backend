@@ -74,7 +74,6 @@ const getMenu = async(req,res)=>{
 
 const uploadImage = async(req,res)=>{
     try{
-        console.log('hello')
         const result = await imageUploadService.uploadImage(req);
         const data = {
             imageUrl : result.secure_url,

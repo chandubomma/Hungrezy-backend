@@ -30,7 +30,37 @@ const signup = async(req,res)=>{
     }
 }
 
+const restaurantSignin = async(req,res)=>{
+    try {
+        const result = await authService.restaurantSignin(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
+            showMessage: false,
+            data: result.token,
+        });
+    } catch (error) {
+        console.error(`${TAG} ERROR in restaurantSignin() => ${error}`);
+    }
+}
+
+const restaurantSignup = async(req,res)=>{
+    try {
+        const result = await authService.restaurantSignup(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
+            showMessage: false,
+            data: result.token,
+        });
+    } catch (error) {
+        console.error(`${TAG} ERROR in restaurantSignup() => ${error}`);
+    }
+}
+
 export{
     signin,
     signup,
+    restaurantSignup,
+    restaurantSignin,
 }
