@@ -15,3 +15,6 @@ export const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL;
 export const NOTIFICATION_PASSWORD = process.env.NOTIFICATION_PASSWORD;
 export const JWT_SECRET = process.env.JWT_SECRET;
 export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET

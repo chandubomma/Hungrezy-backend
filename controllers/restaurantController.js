@@ -1,4 +1,4 @@
-import { restaurantService } from "../services/index.js"
+import { restaurantService,imageUploadService } from "../services/index.js"
 
 const TAG = 'controller.restaurant';
 
@@ -72,6 +72,29 @@ const getMenu = async(req,res)=>{
     }
 }
 
+const uploadImage = async(req,res)=>{
+    try{
+        console.log('hello')
+        const result = await imageUploadService.uploadImage(req);
+        const data = {
+            imageUrl : result.secure_url,
+            imageId : result.public_id,
+            restaurantId : req.params.id
+        }
+        const restaurant = await restaurantService.addImageDetails();
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : restaurant,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in uploadImage() => ${error.message}`);
+        res.status(error.status).send({
+            error : error.message
+        })
+    }
+}
+
 
 export {
     getRestaurants,
@@ -79,4 +102,5 @@ export {
     getRestaurantId,
     updateRestaurant,
     getMenu,
+    uploadImage,
 }

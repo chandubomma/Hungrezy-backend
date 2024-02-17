@@ -82,10 +82,37 @@ const getMenu = async(id)=>{
     }
 }
 
+const addImageDetails = async(data)=>{
+    const {imageUrl,imageId,restaurantId} = data
+    if(!imageUrl && !imageId && restaurantId)throw{
+        message : 'Image details not provided',
+        status : 400
+    }
+    try{
+        const ObjectId = dbUtils.stringToObjectId(restaurantId)
+        const restaurant = await Restaurant.findById(ObjectId)
+        if(!restaurant)throw{
+            message : 'Restaurant not found!',
+            status : 404,
+        }
+        restaurant.image = imageUrl;
+        restaurant.imageId = imageId;
+        await restaurant.save();
+        return {
+            status: 200,
+            message: 'Image details added successfully',
+            data: restaurant
+        };
+    }catch(error){
+        console.error(`${TAG} ERROR in addImageDetails() => ${error}`);
+    }
+}
+
 
 export {
     getRestaurants,
     getRestaurantById,
     getRestaurantId,
     getMenu,
+    addImageDetails,
 }

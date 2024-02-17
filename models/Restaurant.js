@@ -19,6 +19,9 @@ const restaurantSchema = new Schema({
   image: {
     type: String,
   },
+  imageId: {
+    type: String,
+  },
   rating: {
     type: String, 
   },
