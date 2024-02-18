@@ -1,5 +1,6 @@
 import { passwordUtils,authUtils } from "../utils/index.js";
-import {User,Restaurant,Admin} from '../models/index.js';
+import { emailService } from './index.js';
+import {User,Restaurant,Admin,UserVerification} from '../models/index.js';
 import * as Constants from '../constants/userRoleConstants.js'
 
 const signin = async(payload)=>{
@@ -29,6 +30,72 @@ const signin = async(payload)=>{
             message : 'Sign in Successfull!',
             token : token
         };
+    }catch(error){
+        console.error(error)
+    }
+}
+
+const signinSendOtp = async(payload)=>{
+    const {email,user_role} = payload;
+    try{
+        let user;
+        if(user_role==Constants.USER_ROLE)user = await User.findOne({email});
+        else if(user_role==Constants.USER_ROLE_RESTAURANT)user = await Restaurant.findOne({email});
+        else if(user_role==Constants.USER_ROLE_ADMIN)user = await Admin.findOne({email});
+        if(!user){
+            return {
+                status : 400,
+                message : 'User not found! Please Signup first'
+            }
+        }
+        const verificationCode = passwordUtils.generateRandomOTP(6);
+        let userVerification = await UserVerification.findOne({ email, user_role });
+        if (userVerification) {
+          userVerification.otp = verificationCode;
+        } else {
+          userVerification = new UserVerification({ email, user_role, otp: verificationCode });
+        }
+        await userVerification.save();
+        await emailService.sendVerificationEmail(email, verificationCode);
+        return {
+            status : 200,
+            message : "Verification code sent successfully!"
+        }
+    }catch(error){
+        console.error(error);
+        return {
+            status : 500,
+            message : 'Internal Server Error'
+        }
+    }
+}
+
+const signinVerifyOtp = async(payload)=>{
+    const {email,user_role,verificationCode} = payload;
+    try{
+        const userVerification = await UserVerification.findOne({ email});
+        if (userVerification && userVerification.otp === verificationCode) {
+            let user;
+            if(user_role==Constants.USER_ROLE)user = await User.findOne({email});
+            else if(user_role==Constants.USER_ROLE_RESTAURANT)user = await Restaurant.findOne({email});
+            else if(user_role==Constants.USER_ROLE_ADMIN)user = await Admin.findOne({email});
+          const accessToken = await authUtils.generateAccessToken({id:email,user_role:user_role},'1h');
+          const refreshToken = await authUtils.generateRefreshToken({user});
+            const token = {}
+            token.accessToken = accessToken;
+            token.refreshToken = refreshToken;
+            token.user = user;
+            return {
+                status : 200 ,
+                message : 'Sign in Successfull!',
+                token : token
+            };
+        } else {
+          return {
+            status : 401,
+            message : 'Invalid verification code'
+          }
+        }
     }catch(error){
         console.error(error)
     }
@@ -234,5 +301,7 @@ export {
     restaurantSignup,
     restaurantSignin,
     adminSignin,
-    adminSignup
+    adminSignup,
+    signinSendOtp,
+    signinVerifyOtp,
 }
