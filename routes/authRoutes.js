@@ -13,7 +13,8 @@ const initAuthRoutes = ()=>{
   authRoutes.post('/restaurant/signin',validations.restaurantSignin,authController.restaurantSignin);
   authRoutes.post('/admin/signup',validations.adminSignup,authController.adminSignup);
   authRoutes.post('/admin/signin',validations.adminSignin,authController.adminSignin);
-
+  authRoutes.post('/signin-otp/send-verification-code',validations.signinSendOtp,authController.signinSendOtp);
+  authRoutes.post('/signin-otp/verify-code',validations.signinVerifyOtp,authController.signinVerifyOtp);
   return authRoutes;
 }
 

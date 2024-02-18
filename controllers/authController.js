@@ -16,6 +16,36 @@ const signin = async(req,res)=>{
     }
 }
 
+const signinSendOtp = async(req,res)=>{
+    try {
+        const result = await authService.signinSendOtp(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
+            showMessage: false,
+            data: result.token,
+        });
+    } catch (error) {
+        console.error(`${TAG} ERROR in signinSendOtp() => ${error}`);
+    }
+}
+
+const signinVerifyOtp = async(req,res)=>{
+    try {
+        const result = await authService.signinVerifyOtp(req.body);
+        res.status(result.status).send({
+            status: result.status,
+            message: result.message,
+            showMessage: false,
+            data: result.token,
+        });
+    } catch (error) {
+        console.error(`${TAG} ERROR in signinVerifyOtp() => ${error}`);
+    }
+}
+
+
+
 const signup = async(req,res)=>{
     try {
         const result = await authService.signup(req.body);
@@ -93,4 +123,6 @@ export{
     restaurantSignin,
     adminSignin,
     adminSignup,
+    signinSendOtp,
+    signinVerifyOtp,
 }

@@ -14,6 +14,23 @@ const signin  = async(req,res,next)=>{
     await validate(schema,req,res,next);
 }
 
+const signinSendOtp = async(req,res,next)=>{
+    const schema = Joi.object({
+        email : emailValidation.required(),
+        user_role : Joi.string().required()
+    })
+    await validate(schema,req,res,next);
+}
+
+const signinVerifyOtp = async(req,res,next)=>{
+    const schema = Joi.object({
+        email : emailValidation.required(),
+        user_role : Joi.string().required(),
+        verificationCode : Joi.string().required(),
+    })
+    await validate(schema,req,res,next);
+}
+
 const restaurantSignin  = async(req,res,next)=>{
     const schema = Joi.object({
         email : emailValidation.required(),
@@ -71,4 +88,6 @@ export {
     restaurantSignin,
     adminSignin,
     adminSignup,
+    signinSendOtp,
+    signinVerifyOtp,
 }
