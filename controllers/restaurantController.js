@@ -76,11 +76,11 @@ const uploadImage = async(req,res)=>{
     try{
         const result = await imageUploadService.uploadImage(req);
         const data = {
-            imageUrl : result.secure_url,
-            imageId : result.public_id,
+            imageUrl : result.data.secure_url,
+            imageId : result.data.public_id,
             restaurantId : req.params.id
         }
-        const restaurant = await restaurantService.addImageDetails();
+        const restaurant = await restaurantService.addImageDetails(data);
         res.status(result.status).send({
             status : result.status,
             message : result.message,
