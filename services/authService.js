@@ -183,7 +183,8 @@ const restaurantSignup = async(payload)=>{
     const {
         email,
         password,
-        name
+        name,
+        accessToken
     } = payload
     try{
         const decode = await authUtils.verifyJWT(accessToken);
@@ -215,6 +216,10 @@ const restaurantSignup = async(payload)=>{
         }
     }catch(error){
         console.error(error);
+        return {
+            status : 400,
+            message : error
+        }
     }
 }
 
