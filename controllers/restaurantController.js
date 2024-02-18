@@ -74,7 +74,7 @@ const updateRestaurant = async(req,res)=>{
 
 const getMenu = async(req,res)=>{
     try{
-        const result = await restaurantService.getMenu(req.params.id);
+        const result = await restaurantService.getMenu(req.params.menu_id);
         res.status(result.status).send({
             status : result.status,
             message : result.message,
