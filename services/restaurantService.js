@@ -25,6 +25,26 @@ const getRestaurants = async(query)=>{
     
 }
 
+const getLocations = async()=>{
+    try {
+        const citiesWithAreas = await Restaurant.aggregate([
+            { $group: { _id: '$city', areas: { $addToSet: '$area' } } }
+        ]);
+        const citiesAndAreas = {};
+        citiesWithAreas.forEach(({ _id, areas }) => {
+            citiesAndAreas[_id] = areas;
+        });
+        return {
+            status : 200,
+            message : 'Locations HIT!',
+            data : citiesAndAreas
+        };
+    } catch (error) {
+        console.error(`${TAG} ERROR in getLocations() => ${error}`);
+        throw error;
+    }
+}
+
 
 const getRestaurantById = async(id)=>{
     if(!id)throw{
@@ -115,4 +135,5 @@ export {
     getRestaurantId,
     getMenu,
     addImageDetails,
+    getLocations,
 }

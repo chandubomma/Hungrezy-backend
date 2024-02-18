@@ -18,6 +18,22 @@ const getRestaurants = async(req,res)=>{
     }
 }
 
+const getLocations = async(req,res)=>{
+    try{
+        const result = await restaurantService.getLocations();
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in getLocations() => ${error.message}`);
+        res.status(error.status).send({
+            error : error.message
+        })
+    }
+}
+
 
 const getRestaurantById = async(req,res)=>{
     try{
@@ -102,4 +118,5 @@ export {
     updateRestaurant,
     getMenu,
     uploadImage,
+    getLocations,
 }
