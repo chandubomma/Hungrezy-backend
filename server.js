@@ -7,8 +7,8 @@ import connectDB from "./db/connectDB.js"
 import initRoutes from "./routes/index.js";
 import path from 'path';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 import { connectToMongoDB } from "./db/mongoClient.js";
-
 
 
 const app = express();
@@ -18,6 +18,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 // Use import.meta.url to derive __dirname
 const __filename = new URL(import.meta.url).pathname;

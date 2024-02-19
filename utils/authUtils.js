@@ -27,7 +27,7 @@ const verifyJWT = async (token) => {
 };
 
 const verifyRefreshJWT = async (token) => {
-    return jsonwebtoken.verify(token, REFRESH_JWT_SECRET);
+    return jsonwebtoken.verify(token, JWT_REFRESH_SECRET);
 };
 
 

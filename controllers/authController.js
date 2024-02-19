@@ -1,11 +1,15 @@
 import {authService} from '../services/index.js'
+import { authUtils } from "../utils/index.js";
 
 const TAG = 'controller.auth';
 
 const signin = async(req,res)=>{
     try {
         const result = await authService.signin(req.body);
-        res.status(result.status).send({
+        const refreshToken = result.token.refreshToken;
+        delete result.token.refreshToken;
+        res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        .status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -33,7 +37,10 @@ const signinSendOtp = async(req,res)=>{
 const signinVerifyOtp = async(req,res)=>{
     try {
         const result = await authService.signinVerifyOtp(req.body);
-        res.status(result.status).send({
+        const refreshToken = result.token.refreshToken;
+        delete result.token.refreshToken;
+        res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        .status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -49,7 +56,10 @@ const signinVerifyOtp = async(req,res)=>{
 const signup = async(req,res)=>{
     try {
         const result = await authService.signup(req.body);
-        res.status(result.status).send({
+        const refreshToken = result.token.refreshToken;
+        delete result.token.refreshToken;
+        res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        .status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -63,7 +73,10 @@ const signup = async(req,res)=>{
 const restaurantSignin = async(req,res)=>{
     try {
         const result = await authService.restaurantSignin(req.body);
-        res.status(result.status).send({
+        const refreshToken = result.token.refreshToken;
+        delete result.token.refreshToken;
+        res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        .status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -77,7 +90,10 @@ const restaurantSignin = async(req,res)=>{
 const restaurantSignup = async(req,res)=>{
     try {
         const result = await authService.restaurantSignup(req.body);
-        res.status(result.status).send({
+        const refreshToken = result.token.refreshToken;
+        delete result.token.refreshToken;
+        res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        .status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -91,7 +107,10 @@ const restaurantSignup = async(req,res)=>{
 const adminSignin = async(req,res)=>{
     try {
         const result = await authService.adminSignin(req.body);
-        res.status(result.status).send({
+        const refreshToken = result.token.refreshToken;
+        delete result.token.refreshToken;
+        res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        .status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -105,7 +124,10 @@ const adminSignin = async(req,res)=>{
 const adminSignup = async(req,res)=>{
     try {
         const result = await authService.adminSignup(req.body);
-        res.status(result.status).send({
+        const refreshToken = result.token.refreshToken;
+        delete result.token.refreshToken;
+        res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        .status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -113,6 +135,20 @@ const adminSignup = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in adminSignup() => ${error}`);
+    }
+}
+
+const refresh_Token = async(req,res)=>{
+    try {
+        const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken) {
+            return res.status(401).json({ message: 'Refresh token not found' });
+        }
+        const decode  = await authUtils.verifyRefreshJWT(refreshToken);
+        const accessToken = await authUtils.generateAccessToken({id:decode.email,user_role:req.body.user_role});
+        res.status(200).send({accessToken});
+    } catch (error) {
+        console.error(`${TAG} refresh_Token() => ${error}`);
     }
 }
 
@@ -125,4 +161,5 @@ export{
     adminSignup,
     signinSendOtp,
     signinVerifyOtp,
+    refresh_Token,
 }

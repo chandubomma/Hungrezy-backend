@@ -7,6 +7,7 @@ const initAuthRoutes = ()=>{
   const authRoutes = express.Router();
   authRoutes.post('/send-verification-code', verificationController.sendVerificationCode);
   authRoutes.post('/verify-code', verificationController.verifyCode);
+  authRoutes.post('/refresh-token', authController.refresh_Token);
   authRoutes.post('/user/signup',validations.signup,authController.signup);
   authRoutes.post('/user/signin',validations.signin,authController.signin);
   authRoutes.post('/restaurant/signup',validations.restaurantSignup,authController.restaurantSignup);
