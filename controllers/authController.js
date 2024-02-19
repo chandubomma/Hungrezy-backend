@@ -6,10 +6,12 @@ const TAG = 'controller.auth';
 const signin = async(req,res)=>{
     try {
         const result = await authService.signin(req.body);
-        const refreshToken = result.token.refreshToken;
-        delete result.token.refreshToken;
-        res.cookie('refreshToken', refreshToken, { httpOnly: true })
-        .status(result.status).send({
+        if(result.token){
+            const refreshToken = result.token.refreshToken;
+            delete result.token.refreshToken;
+            res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        }
+        res.status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -37,10 +39,12 @@ const signinSendOtp = async(req,res)=>{
 const signinVerifyOtp = async(req,res)=>{
     try {
         const result = await authService.signinVerifyOtp(req.body);
-        const refreshToken = result.token.refreshToken;
-        delete result.token.refreshToken;
-        res.cookie('refreshToken', refreshToken, { httpOnly: true })
-        .status(result.status).send({
+        if(result.token){
+            const refreshToken = result.token.refreshToken;
+            delete result.token.refreshToken;
+            res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        }
+        res.status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -56,10 +60,12 @@ const signinVerifyOtp = async(req,res)=>{
 const signup = async(req,res)=>{
     try {
         const result = await authService.signup(req.body);
-        const refreshToken = result.token.refreshToken;
-        delete result.token.refreshToken;
-        res.cookie('refreshToken', refreshToken, { httpOnly: true })
-        .status(result.status).send({
+        if(result.token){
+            const refreshToken = result.token.refreshToken;
+            delete result.token.refreshToken;
+            res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        }
+        res.status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -73,10 +79,12 @@ const signup = async(req,res)=>{
 const restaurantSignin = async(req,res)=>{
     try {
         const result = await authService.restaurantSignin(req.body);
-        const refreshToken = result.token.refreshToken;
-        delete result.token.refreshToken;
-        res.cookie('refreshToken', refreshToken, { httpOnly: true })
-        .status(result.status).send({
+        if(result.token){
+            const refreshToken = result.token.refreshToken;
+            delete result.token.refreshToken;
+            res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        }
+        res.status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -90,10 +98,12 @@ const restaurantSignin = async(req,res)=>{
 const restaurantSignup = async(req,res)=>{
     try {
         const result = await authService.restaurantSignup(req.body);
-        const refreshToken = result.token.refreshToken;
-        delete result.token.refreshToken;
-        res.cookie('refreshToken', refreshToken, { httpOnly: true })
-        .status(result.status).send({
+        if(result.token){
+            const refreshToken = result.token.refreshToken;
+            delete result.token.refreshToken;
+            res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        }
+        res.status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -107,10 +117,12 @@ const restaurantSignup = async(req,res)=>{
 const adminSignin = async(req,res)=>{
     try {
         const result = await authService.adminSignin(req.body);
-        const refreshToken = result.token.refreshToken;
-        delete result.token.refreshToken;
-        res.cookie('refreshToken', refreshToken, { httpOnly: true })
-        .status(result.status).send({
+        if(result.token){
+            const refreshToken = result.token.refreshToken;
+            delete result.token.refreshToken;
+            res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        }
+        res.status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,
@@ -124,10 +136,12 @@ const adminSignin = async(req,res)=>{
 const adminSignup = async(req,res)=>{
     try {
         const result = await authService.adminSignup(req.body);
-        const refreshToken = result.token.refreshToken;
-        delete result.token.refreshToken;
-        res.cookie('refreshToken', refreshToken, { httpOnly: true })
-        .status(result.status).send({
+        if(result.token){
+            const refreshToken = result.token.refreshToken;
+            delete result.token.refreshToken;
+            res.cookie('refreshToken', refreshToken, { httpOnly: true })
+        }
+        res.status(result.status).send({
             status: result.status,
             message: result.message,
             showMessage: false,

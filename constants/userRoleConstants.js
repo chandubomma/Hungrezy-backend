@@ -1,4 +1,4 @@
-export const USER_ROLE = 'User';
-export const USER_ROLE_RESTAURANT = 'Restaurant';
-export const USER_ROLE_ADMIN = 'Admin';
-export const USER_ROLE_SUPERADMIN = 'SuperAdmin';
+export const USER_ROLE = 'user';
+export const USER_ROLE_RESTAURANT = 'restaurant';
+export const USER_ROLE_ADMIN = 'admin';
+export const USER_ROLE_SUPERADMIN = 'superadmin';
