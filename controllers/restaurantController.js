@@ -2,7 +2,7 @@ import { restaurantService,imageUploadService } from "../services/index.js"
 
 const TAG = 'controller.restaurant';
 
-const getRestaurants = async(req,res)=>{
+const getRestaurants = async(req,res,next)=>{
     try{
         const result = await restaurantService.getRestaurants(req.query);
         res.status(result.status).send({
@@ -12,13 +12,11 @@ const getRestaurants = async(req,res)=>{
         })
     }catch(error){
         console.error(`${TAG} ERROR in getRestaurants() => ${error.message}`);
-        res.status(error.status).send({
-            error : error.message
-        })
+        next(error)
     }
 }
 
-const getLocations = async(req,res)=>{
+const getLocations = async(req,res,next)=>{
     try{
         const result = await restaurantService.getLocations();
         res.status(result.status).send({
@@ -28,9 +26,7 @@ const getLocations = async(req,res)=>{
         })
     }catch(error){
         console.error(`${TAG} ERROR in getLocations() => ${error.message}`);
-        res.status(error.status).send({
-            error : error.message
-        })
+        next(error)
     }
 }
 
@@ -45,9 +41,7 @@ const getRestaurantById = async(req,res)=>{
         })
     }catch(error){
         console.error(`${TAG} ERROR in getRestaurantById() => ${error.message}`);
-        res.status(error.status).send({
-            error : error.message
-        })
+        next(error)
     }
 }
 
@@ -61,9 +55,7 @@ const getRestaurantId = async(req,res)=>{
         })
     }catch(error){
         console.error(`${TAG} ERROR in getRestaurantId() => ${error.message}`);
-        res.status(error.status).send({
-            error : error.message
-        })
+        next(error)
     }
 }
 
@@ -77,9 +69,7 @@ const updateRestaurant = async(req,res)=>{
         })
     }catch(error){
         console.error(`${TAG} ERROR in updateRestaurant() => ${error.message}`);
-        res.status(error.status).send({
-            error : error.message
-        })
+        next(error)
     }
 }
 
@@ -94,9 +84,7 @@ const getMenu = async(req,res)=>{
         })
     }catch(error){
         console.error(`${TAG} ERROR in getMenu() => ${error.message}`);
-        res.status(error.status).send({
-            error : error.message
-        })
+        next(error)
     }
 }
 
@@ -116,9 +104,7 @@ const uploadImage = async(req,res)=>{
         })
     }catch(error){
         console.error(`${TAG} ERROR in uploadImage() => ${error.message}`);
-        res.status(error.status).send({
-            error : error.message
-        })
+        next(error)
     }
 }
 

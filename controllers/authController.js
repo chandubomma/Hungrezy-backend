@@ -3,7 +3,7 @@ import { authUtils } from "../utils/index.js";
 
 const TAG = 'controller.auth';
 
-const signin = async(req,res)=>{
+const signin = async(req,res,next)=>{
     try {
         const result = await authService.signin(req.body);
         if(result.token){
@@ -19,10 +19,11 @@ const signin = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in signin() => ${error}`);
+        next(error)
     }
 }
 
-const signinSendOtp = async(req,res)=>{
+const signinSendOtp = async(req,res,next)=>{
     try {
         const result = await authService.signinSendOtp(req.body);
         res.status(result.status).send({
@@ -33,10 +34,11 @@ const signinSendOtp = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in signinSendOtp() => ${error}`);
+        next(error)
     }
 }
 
-const signinVerifyOtp = async(req,res)=>{
+const signinVerifyOtp = async(req,res,next)=>{
     try {
         const result = await authService.signinVerifyOtp(req.body);
         if(result.token){
@@ -52,12 +54,13 @@ const signinVerifyOtp = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in signinVerifyOtp() => ${error}`);
+        next(error)
     }
 }
 
 
 
-const signup = async(req,res)=>{
+const signup = async(req,res,next)=>{
     try {
         const result = await authService.signup(req.body);
         if(result.token){
@@ -73,10 +76,11 @@ const signup = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in signup() => ${error}`);
+        next(error)
     }
 }
 
-const restaurantSignin = async(req,res)=>{
+const restaurantSignin = async(req,res,next)=>{
     try {
         const result = await authService.restaurantSignin(req.body);
         if(result.token){
@@ -92,10 +96,11 @@ const restaurantSignin = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in restaurantSignin() => ${error}`);
+        next(error)
     }
 }
 
-const restaurantSignup = async(req,res)=>{
+const restaurantSignup = async(req,res,next)=>{
     try {
         const result = await authService.restaurantSignup(req.body);
         if(result.token){
@@ -111,10 +116,11 @@ const restaurantSignup = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in restaurantSignup() => ${error}`);
+        next(error)
     }
 }
 
-const adminSignin = async(req,res)=>{
+const adminSignin = async(req,res,next)=>{
     try {
         const result = await authService.adminSignin(req.body);
         if(result.token){
@@ -130,10 +136,11 @@ const adminSignin = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in adminSignin() => ${error}`);
+        next(error)
     }
 }
 
-const adminSignup = async(req,res)=>{
+const adminSignup = async(req,res,next)=>{
     try {
         const result = await authService.adminSignup(req.body);
         if(result.token){
@@ -149,6 +156,7 @@ const adminSignup = async(req,res)=>{
         });
     } catch (error) {
         console.error(`${TAG} ERROR in adminSignup() => ${error}`);
+        next(error)
     }
 }
 
@@ -163,6 +171,7 @@ const refresh_Token = async(req,res)=>{
         res.status(200).send({accessToken});
     } catch (error) {
         console.error(`${TAG} refresh_Token() => ${error}`);
+        next(error)
     }
 }
 
