@@ -102,6 +102,30 @@ const getMenu = async(id)=>{
     }
 }
 
+const updateRestaurant = async(req)=>{
+    const {city,area,address}=req.body;
+    const id = req.params.id;
+    try{
+        const ObjectId = dbUtils.stringToObjectId(id);
+        const restaurant = await Restaurant.findById(ObjectId)
+        if(!restaurant)throw{
+            message : 'Restaurant not found!',
+            status : 404,
+        }
+        restaurant.city=city;
+        restaurant.area=area;
+        restaurant.address=address;
+        await restaurant.save();
+        return {
+            status : 200,
+            message : 'Restaurant details updated',
+            data : restaurant,
+        }
+    }catch(error){
+        console.error(`${TAG} ERROR in updateRestaurant() => ${error}`);
+    }
+}
+
 const addImageDetails = async(data)=>{
     const {imageUrl,imageId,restaurantId} = data
     if(!imageUrl && !imageId && restaurantId)throw{
@@ -136,4 +160,5 @@ export {
     getMenu,
     addImageDetails,
     getLocations,
+    updateRestaurant,
 }

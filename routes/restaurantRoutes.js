@@ -3,6 +3,7 @@ import { restaurantController } from '../controllers/index.js';
 import { isRestaurant } from '../middleware/permissionsMiddleware.js';
 import { isAuthenticated } from '../middleware/authenticationMiddleware.js';
 import { multerUploads } from '../middleware/multerMiddleware.js';
+import * as validations from '../middleware/validations/restaurantValidations.js';
 
 const initRestaurantRoutes = ()=>{
   const restaurantRoutes = express.Router();
@@ -10,7 +11,8 @@ const initRestaurantRoutes = ()=>{
   restaurantRoutes.route('/locations').get(restaurantController.getLocations)
   restaurantRoutes.route('/id').get(restaurantController.getRestaurantId)
   restaurantRoutes.route('/menu/:menu_id').get(restaurantController.getMenu)
-  restaurantRoutes.route('/:id').get(restaurantController.getRestaurantById).put(isRestaurant,restaurantController.updateRestaurant)
+  restaurantRoutes.route('/:id').get(restaurantController.getRestaurantById)
+                  .put(isAuthenticated,isRestaurant,validations.restaurantUpdateDetails,restaurantController.updateRestaurant)
   restaurantRoutes.route('/:id/upload/image').post(isAuthenticated,isRestaurant,multerUploads,restaurantController.uploadImage)
   return restaurantRoutes;
 }

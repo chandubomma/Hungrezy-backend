@@ -68,7 +68,19 @@ const getRestaurantId = async(req,res)=>{
 }
 
 const updateRestaurant = async(req,res)=>{
-
+    try{
+        const result = await restaurantService.updateRestaurant(req);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in updateRestaurant() => ${error.message}`);
+        res.status(error.status).send({
+            error : error.message
+        })
+    }
 }
 
 
