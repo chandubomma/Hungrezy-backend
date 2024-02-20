@@ -19,7 +19,7 @@ const signin = async(payload)=>{
                 status: 400,
             }
         }
-        const accessToken = await authUtils.generateAccessToken({id:user.email,user_role:Constants.USER_ROLE});
+        const accessToken = await authUtils.generateAccessToken({id:user.email,user_role:Constants.USER_ROLE,user});
         const refreshToken = await authUtils.generateRefreshToken({user});
         const token = {}
         token.accessToken = accessToken;
@@ -79,7 +79,7 @@ const signinVerifyOtp = async(payload)=>{
             if(user_role==Constants.USER_ROLE)user = await User.findOne({email});
             else if(user_role==Constants.USER_ROLE_RESTAURANT)user = await Restaurant.findOne({email});
             else if(user_role==Constants.USER_ROLE_ADMIN)user = await Admin.findOne({email});
-          const accessToken = await authUtils.generateAccessToken({id:email,user_role:user_role},'1h');
+          const accessToken = await authUtils.generateAccessToken({id:email,user_role:user_role,user},'1h');
           const refreshToken = await authUtils.generateRefreshToken({user});
             const token = {}
             token.accessToken = accessToken;
@@ -124,7 +124,7 @@ const signup = async(payload)=>{
             }
             let user = new User(temp)
             await user.save()
-            const accessToken = await authUtils.generateAccessToken({id:user.email,user_role:Constants.USER_ROLE});
+            const accessToken = await authUtils.generateAccessToken({id:user.email,user_role:Constants.USER_ROLE,user});
             const refreshToken = await authUtils.generateRefreshToken({user});
             const token = {}
             token.accessToken = accessToken;
@@ -162,7 +162,7 @@ const restaurantSignin = async(payload)=>{
                 status: 400,
             }
         }
-        const accessToken = await authUtils.generateAccessToken({id:restaurant.email,user_role:Constants.USER_ROLE_RESTAURANT});
+        const accessToken = await authUtils.generateAccessToken({id:restaurant.email,user_role:Constants.USER_ROLE_RESTAURANT,user:restaurant});
         const refreshToken = await authUtils.generateRefreshToken({restaurant});
         const token = {}
         token.accessToken = accessToken;
@@ -197,7 +197,7 @@ const restaurantSignup = async(payload)=>{
             }
             let restaurant = new Restaurant(temp)
             await restaurant.save()
-            const accessToken = await authUtils.generateAccessToken({id:restaurant.email,user_role:Constants.USER_ROLE_RESTAURANT});
+            const accessToken = await authUtils.generateAccessToken({id:restaurant.email,user_role:Constants.USER_ROLE_RESTAURANT,user:restaurant});
             const refreshToken = await authUtils.generateRefreshToken({restaurant});
             const token = {}
             token.accessToken = accessToken;
@@ -240,7 +240,7 @@ const adminSignin = async(payload)=>{
                 status: 400,
             }
         }
-        const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:Constants.USER_ROLE_ADMIN});
+        const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:Constants.USER_ROLE_ADMIN,user:admin});
         const refreshToken = await authUtils.generateRefreshToken({admin});
         const token = {}
         token.accessToken = accessToken;
@@ -276,7 +276,7 @@ const adminSignup = async(payload)=>{
             }
             let admin = new Admin(temp)
             await admin.save()
-            const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:Constants.USER_ROLE_ADMIN});
+            const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:Constants.USER_ROLE_ADMIN,user:admin});
             const refreshToken = await authUtils.generateRefreshToken({admin});
             const token = {}
             token.accessToken = accessToken;
