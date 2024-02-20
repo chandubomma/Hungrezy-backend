@@ -25,9 +25,9 @@ const sendVerificationCode = async (req, res) => {
 
 
 const verifyCode = async (req, res) => {
-  const { email, verificationCode } = req.body;
+  const { email, verificationCode,user_role } = req.body;
   try {
-    const userVerification = await UserVerification.findOne({ email});
+    const userVerification = await UserVerification.findOne({ email,user_role});
     if (userVerification && userVerification.otp === verificationCode) {
       const payload = {email}
       const accessToken = await authUtils.generateAccessToken(payload,'1h');
