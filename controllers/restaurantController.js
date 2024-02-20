@@ -31,7 +31,7 @@ const getLocations = async(req,res,next)=>{
 }
 
 
-const getRestaurantById = async(req,res)=>{
+const getRestaurantById = async(req,res,next)=>{
     try{
         const result = await restaurantService.getRestaurantById(req.params.id);
         res.status(result.status).send({
@@ -45,7 +45,7 @@ const getRestaurantById = async(req,res)=>{
     }
 }
 
-const getRestaurantId = async(req,res)=>{
+const getRestaurantId = async(req,res,next)=>{
     try{
         const result = await restaurantService.getRestaurantId(req.query);
         res.status(result.status).send({
@@ -59,7 +59,7 @@ const getRestaurantId = async(req,res)=>{
     }
 }
 
-const updateRestaurant = async(req,res)=>{
+const updateRestaurant = async(req,res,next)=>{
     try{
         const result = await restaurantService.updateRestaurant(req);
         res.status(result.status).send({
@@ -74,7 +74,7 @@ const updateRestaurant = async(req,res)=>{
 }
 
 
-const getMenu = async(req,res)=>{
+const getMenu = async(req,res,next)=>{
     try{
         const result = await restaurantService.getMenu(req.params.menu_id);
         res.status(result.status).send({
@@ -88,7 +88,7 @@ const getMenu = async(req,res)=>{
     }
 }
 
-const uploadImage = async(req,res)=>{
+const uploadImage = async(req,res,next)=>{
     try{
         const result = await imageUploadService.uploadImage(req);
         const data = {
