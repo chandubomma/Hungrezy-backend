@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 config({ path: path.resolve(__dirname, '../.env') });
 
 
-
+export const NODE_ENV = process.env.NODE_ENV;
 export const PORT = process.env.PORT;
 export const MONGO_URI = process.env.MONGO_URI;
 export const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL;

@@ -9,6 +9,7 @@ import path from 'path';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { connectToMongoDB } from "./db/mongoClient.js";
+import ErrorHandler from "./middleware/errorHandler.js";
 
 
 const app = express();
@@ -28,6 +29,10 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api',initRoutes());
+
+
+// ERROR HANDLER MIDDLEWARE (Last middleware to use)
+app.use(ErrorHandler)
 
 const port = PORT || 3000;
 
