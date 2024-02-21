@@ -26,21 +26,34 @@ const getRestaurants = async (query) => {
 };
 
 const getRestaurantsCount = async () => {
-  const totalRestaurants = await Restaurant.countDocuments();
-  const approvedRestaurants = await Restaurant.find({ status: "approved" });
-  const suspendedRestaurants = await Restaurant.find({ status: "suspended" });
-  const rejectedRestaurants = await Restaurant.find({ status: "rejected" });
-  const inprogressRestaurants = await Restaurant.find({ status: "inprogress" });
+  try {
+    const [
+      totalRestaurants,
+      approvedRestaurants,
+      suspendedRestaurants,
+      rejectedRestaurants,
+      inprogressRestaurants,
+    ] = await Promise.all([
+      Restaurant.countDocuments(),
+      Restaurant.find({ status: "approved" }).countDocuments(),
+      Restaurant.find({ status: "suspended" }).countDocuments(),
+      Restaurant.find({ status: "rejected" }).countDocuments(),
+      Restaurant.find({ status: "inprogress" }).countDocuments(),
+    ]);
 
-  return {
-    status: 200,
-    message: "Get Restaurants Count Successful!",
-    total: totalRestaurants,
-    approved: approvedRestaurants.length,
-    suspended: suspendedRestaurants.length,
-    rejected: rejectedRestaurants.length,
-    inprogress: inprogressRestaurants.length,
-  };
+    return {
+      status: 200,
+      message: "Get Restaurants Count Successful!",
+      total: totalRestaurants,
+      approved: approvedRestaurants,
+      suspended: suspendedRestaurants,
+      rejected: rejectedRestaurants,
+      inprogress: inprogressRestaurants,
+    };
+  } catch (error) {
+    console.error(`${TAG} ERROR in getLocations() => ${error}`);
+    throw error;
+  }
 };
 
 const getAllRestaurants = async (query) => {
@@ -52,22 +65,6 @@ const getAllRestaurants = async (query) => {
       .limit(perPage);
 
     const totalRestaurants = await Restaurant.countDocuments();
-
-    const approvedRestaurants = restaurants.filter(
-      (restaurant) => restaurant.status === "approved"
-    );
-
-    const rejectedRestaurants = restaurants.filter(
-      (restaurant) => restaurant.status === "rejected"
-    );
-
-    const suspendedRestaurants = restaurants.filter(
-      (restaurant) => restaurant.status === "suspended"
-    );
-
-    const inprogressRestaurants = restaurants.filter(
-      (restaurant) => restaurant.status === "inprogress"
-    );
 
     return {
       status: 200,
@@ -146,7 +143,7 @@ const getRestaurantId = async (query) => {
   }
 };
 
-const getMenu = async (id) => {
+const getMenu = async (id, query) => {
   if (!id)
     throw {
       message: "Id is not provided",
@@ -227,5 +224,5 @@ export {
   addImageDetails,
   getLocations,
   updateRestaurant,
-  getRestaurantsCount
+  getRestaurantsCount,
 };
