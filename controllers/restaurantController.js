@@ -16,6 +16,22 @@ const getRestaurants = async(req,res,next)=>{
     }
 }
 
+const getAllRestaurants = async(req,res,next)=>{
+    try{
+        const result = await restaurantService.getAllRestaurants(req.query);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+            totalPages: result.totalPages,
+            currentPage: result.currentPage,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in getAllRestaurants() => ${error.message}`);
+        next(error)
+    }
+}
+
 const getLocations = async(req,res,next)=>{
     try{
         const result = await restaurantService.getLocations();
@@ -111,6 +127,7 @@ const uploadImage = async(req,res,next)=>{
 
 export {
     getRestaurants,
+    getAllRestaurants,
     getRestaurantById,
     getRestaurantId,
     updateRestaurant,
