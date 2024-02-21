@@ -8,6 +8,7 @@ import * as validations from '../middleware/validations/restaurantValidations.js
 const initRestaurantRoutes = ()=>{
   const restaurantRoutes = express.Router();
   restaurantRoutes.route('/').get(restaurantController.getRestaurants)
+  restaurantRoutes.route('/all').get(restaurantController.getAllRestaurants)
   restaurantRoutes.route('/locations').get(restaurantController.getLocations)
   restaurantRoutes.route('/id').get(restaurantController.getRestaurantId)
   restaurantRoutes.route('/menu/:menu_id').get(restaurantController.getMenu)
