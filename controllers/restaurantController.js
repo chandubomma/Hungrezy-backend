@@ -16,6 +16,24 @@ const getRestaurants = async(req,res,next)=>{
     }
 }
 
+const getRestaurantsCount = async(req,res,next)=>{
+    try{
+        const result = await restaurantService.getRestaurantsCount();
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            approved : result.approved,
+            suspended : result.suspended,
+            rejected : result.rejected,
+            inprogress : result.inprogress,
+            total : result.total,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in getRestaurantsCount() => ${error.message}`);
+        next(error)
+    }
+}
+
 const getAllRestaurants = async(req,res,next)=>{
     try{
         const result = await restaurantService.getAllRestaurants(req.query);
@@ -23,11 +41,6 @@ const getAllRestaurants = async(req,res,next)=>{
             status : result.status,
             message : result.message,
             data : result.data,
-            count: result.count,
-            approved: result.approved,
-            rejected: result.rejected,
-            suspended: result.suspended,
-            inprogress: result.inprogress,
             totalPages: result.totalPages,
             currentPage: result.currentPage,
         })
@@ -139,4 +152,5 @@ export {
     getMenu,
     uploadImage,
     getLocations,
+    getRestaurantsCount
 }

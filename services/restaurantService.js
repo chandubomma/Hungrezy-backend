@@ -25,6 +25,24 @@ const getRestaurants = async (query) => {
   }
 };
 
+const getRestaurantsCount = async () => {
+  const totalRestaurants = await Restaurant.countDocuments();
+  const approvedRestaurants = await Restaurant.find({ status: "approved" });
+  const suspendedRestaurants = await Restaurant.find({ status: "suspended" });
+  const rejectedRestaurants = await Restaurant.find({ status: "rejected" });
+  const inprogressRestaurants = await Restaurant.find({ status: "inprogress" });
+
+  return {
+    status: 200,
+    message: "Get Restaurants Count Successful!",
+    total: totalRestaurants,
+    approved: approvedRestaurants.length,
+    suspended: suspendedRestaurants.length,
+    rejected: rejectedRestaurants.length,
+    inprogress: inprogressRestaurants.length,
+  };
+};
+
 const getAllRestaurants = async (query) => {
   const page = parseInt(query.page);
   const perPage = parseInt(query.perPage);
@@ -55,11 +73,6 @@ const getAllRestaurants = async (query) => {
       status: 200,
       message: "Get Restaurants Successful!",
       data: restaurants,
-      count: totalRestaurants,
-      approved: approvedRestaurants.length,
-      rejected: rejectedRestaurants.length,
-      suspended: suspendedRestaurants.length,
-      inprogress: inprogressRestaurants.length,
       totalPages: Math.ceil(totalRestaurants / perPage),
       currentPage: page,
     };
@@ -214,4 +227,5 @@ export {
   addImageDetails,
   getLocations,
   updateRestaurant,
+  getRestaurantsCount
 };
