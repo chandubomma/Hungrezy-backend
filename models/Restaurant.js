@@ -59,6 +59,8 @@ const restaurantSchema = new Schema({
     enum: ['approved', 'rejected', 'suspended', 'inprogress'],
     default: 'inprogress',
   },
+},{
+  timestamps: true
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);

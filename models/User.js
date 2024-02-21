@@ -28,6 +28,8 @@ const userSchema = new Schema({
   imageId: {
     type: String,
   } 
+},{
+  timestamps: true
 });
 
 

@@ -27,7 +27,13 @@ const adminSchema = new Schema({
   superAdmin: {
     type: Boolean,
     default: false
+  },
+  active : {
+    type: Boolean,
+    default: true
   } 
+},{
+  timestamps: true
 });
 
 
