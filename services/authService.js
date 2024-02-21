@@ -240,7 +240,7 @@ const adminSignin = async(payload)=>{
                 status: 400,
             }
         }
-        const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:Constants.USER_ROLE_ADMIN,user:admin});
+        const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:admin.superAdmin?Constants.USER_ROLE_SUPERADMIN:Constants.USER_ROLE_ADMIN,user:admin});
         const refreshToken = await authUtils.generateRefreshToken({admin});
         const token = {}
         token.accessToken = accessToken;
@@ -262,21 +262,23 @@ const adminSignup = async(payload)=>{
         password,
         lastName,
         firstName,
-        accessToken,
+        superAdmin
+     //   accessToken,
     } = payload
     try{
-        const decode = await authUtils.verifyJWT(accessToken);
-        if(decode){
+       // const decode = await authUtils.verifyJWT(accessToken);
+       // if(decode){
             const hashPassword = await passwordUtils.hashPassword(password)
             const temp = {
                 email,
                 firstName,
                 lastName,
-                password : hashPassword
+                password : hashPassword,
+                superAdmin
             }
             let admin = new Admin(temp)
             await admin.save()
-            const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:Constants.USER_ROLE_ADMIN,user:admin});
+            const accessToken = await authUtils.generateAccessToken({id:admin.email,user_role:superAdmin?Constants.USER_ROLE_SUPERADMIN:Constants.USER_ROLE_ADMIN,user:admin});
             const refreshToken = await authUtils.generateRefreshToken({admin});
             const token = {}
             token.accessToken = accessToken;
@@ -287,12 +289,12 @@ const adminSignup = async(payload)=>{
                 message : 'Sign up successfull!',
                 token : token
             };
-        }else{
-            return {
-                message: 'Signup failed! Please try again.',
-                status: 400,
-            };
-        }
+        // }else{
+        //     return {
+        //         message: 'Signup failed! Please try again.',
+        //         status: 400,
+        //     };
+        // }
     }catch(error){
         console.error(error);
     }

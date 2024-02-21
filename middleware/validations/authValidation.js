@@ -75,7 +75,7 @@ const adminSignup  = async(req,res,next)=>{
         password : passwordValidation.required(),
         firstName : Joi.string().required(),
         lastName : Joi.string().allow(''),
-        accessToken : Joi.string().required(),
+        superAdmin : Joi.boolean(),
     })
     await validate(schema,req,res,next);
 }
