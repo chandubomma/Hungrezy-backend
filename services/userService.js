@@ -1,5 +1,7 @@
 import { User } from "../models/index.js";
 import { dbUtils } from "../utils/index.js";
+import { authUtils } from "../utils/index.js";
+import * as Constants from '../constants/userRoleConstants.js'
 
 const TAG = 'service.user';
 
@@ -20,10 +22,12 @@ const addImageDetails = async(data)=>{
         user.image = imageUrl;
         user.imageId = imageId;
         await user.save();
+        const accessToken = await authUtils.generateAccessToken({id:user.email,user_role:Constants.USER_ROLE,user});
+        const token = {}
+        token.accessToken = accessToken;
+        token.user = user;
         return {
-            status: 200,
-            message: 'Image details added successfully',
-            data: user
+            token
         };
     }catch(error){
         console.error(`${TAG} ERROR in addImageDetails() => ${error}`);

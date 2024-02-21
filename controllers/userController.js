@@ -4,7 +4,7 @@ const TAG = 'controller.user';
 
 
 const uploadImage = async(req,res,next)=>{
-    console.log("yes")
+    
     try{
         const result = await imageUploadService.uploadImage(req);
         const data = {
@@ -12,11 +12,11 @@ const uploadImage = async(req,res,next)=>{
             imageId : result.data.public_id,
             userId : req.params.id
         }
-        const restaurant = await userService.addImageDetails(data);
+        const token = await userService.addImageDetails(data);
         res.status(result.status).send({
             status : result.status,
             message : result.message,
-            data : restaurant,
+            data : token,
         })
     }catch(error){
         console.error(`${TAG} ERROR in uploadImage() => ${error.message}`);
