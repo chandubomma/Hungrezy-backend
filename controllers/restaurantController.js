@@ -23,6 +23,11 @@ const getAllRestaurants = async(req,res,next)=>{
             status : result.status,
             message : result.message,
             data : result.data,
+            count: result.count,
+            approved: result.approved,
+            rejected: result.rejected,
+            suspended: result.suspended,
+            inprogress: result.inprogress,
             totalPages: result.totalPages,
             currentPage: result.currentPage,
         })

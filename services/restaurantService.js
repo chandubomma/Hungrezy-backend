@@ -26,8 +26,8 @@ const getRestaurants = async (query) => {
 };
 
 const getAllRestaurants = async (query) => {
-  const page = parseInt(query.page) || 1;
-  const perPage = parseInt(query.perPage) || 10;
+  const page = parseInt(query.page);
+  const perPage = parseInt(query.perPage);
   try {
     const restaurants = await Restaurant.find()
       .skip((page - 1) * perPage)
@@ -35,10 +35,31 @@ const getAllRestaurants = async (query) => {
 
     const totalRestaurants = await Restaurant.countDocuments();
 
+    const approvedRestaurants = restaurants.filter(
+      (restaurant) => restaurant.status === "approved"
+    );
+
+    const rejectedRestaurants = restaurants.filter(
+      (restaurant) => restaurant.status === "rejected"
+    );
+
+    const suspendedRestaurants = restaurants.filter(
+      (restaurant) => restaurant.status === "suspended"
+    );
+
+    const inprogressRestaurants = restaurants.filter(
+      (restaurant) => restaurant.status === "inprogress"
+    );
+
     return {
       status: 200,
       message: "Get Restaurants Successful!",
       data: restaurants,
+      count: totalRestaurants,
+      approved: approvedRestaurants.length,
+      rejected: rejectedRestaurants.length,
+      suspended: suspendedRestaurants.length,
+      inprogress: inprogressRestaurants.length,
       totalPages: Math.ceil(totalRestaurants / perPage),
       currentPage: page,
     };
