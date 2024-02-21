@@ -36,7 +36,24 @@ const sendVerificationEmail = async(email, verificationCode) => {
   });
 };
 
+const shareAdminCredentialsEmail = async(email, password,name) => {
+  const htmlContent = fs.readFileSync('public/AdminCredentials.html', 'utf-8');
+  const notificationTransporter = await createTransport(NOTIFICATION_EMAIL,NOTIFICATION_PASSWORD);
+  const emailContent = htmlContent.replace('{email}', email).replace('{password}', password).replace('{Admin}',name)
+  const mailOptions = {
+    from: NOTIFICATION_EMAIL,
+    to: email,
+    subject: 'Hungrezy Admin Credentials',
+    html: emailContent,
+  };
+  notificationTransporter.sendMail(mailOptions, (error, info) => {
+    if (error)console.error(error);
+    else console.log('Email sent: ' + info.response);
+  });
+};
+
 
 export {
   sendVerificationEmail,
+  shareAdminCredentialsEmail,
 }

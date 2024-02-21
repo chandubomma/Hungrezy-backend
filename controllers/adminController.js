@@ -31,9 +31,23 @@ const setActive = async(req,res,next)=>{
     }
 }
 
+const shareAdminCredentials = async(req,res,next)=>{
+    try{
+        const result = await adminService.shareAdminCredentials(req.params.id);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in shareAdminCredentials() => ${error.message}`);
+        next(error)
+    }
+}
 
 
 export {
     getAdmins,
     setActive,
+    shareAdminCredentials
 }

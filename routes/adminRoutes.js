@@ -10,6 +10,7 @@ const initAdminRoutes = ()=>{
     //adminRoutes.route('/:id/upload/image').post(isAuthenticated,isUser,multerUploads,userController.uploadImage)
     adminRoutes.route('/all').get(adminController.getAdmins)
     adminRoutes.route('/:id/status').post(adminController.setActive)
+    adminRoutes.route('/:id/share-credentials').post(adminController.shareAdminCredentials)
     return adminRoutes;
   }
   

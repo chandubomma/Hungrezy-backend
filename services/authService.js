@@ -274,12 +274,12 @@ const adminSignup = async(payload)=>{
     try{
        // const decode = await authUtils.verifyJWT(accessToken);
        // if(decode){
-            const hashPassword = await passwordUtils.hashPassword(password)
+           // const hashPassword = await passwordUtils.hashPassword(password)
             const temp = {
                 email,
                 firstName,
                 lastName,
-                password : hashPassword,
+                password,
                 superAdmin
             }
             let admin = new Admin(temp)

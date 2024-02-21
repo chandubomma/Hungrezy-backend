@@ -1,5 +1,6 @@
 import { Admin } from "../models/index.js";
 import { dbUtils } from "../utils/index.js";
+import { shareAdminCredentialsEmail } from "./emailService.js";
 
 const TAG = "service.admin";
 
@@ -35,7 +36,25 @@ const setActive = async (id,active) => {
   };
 
 
+  const shareAdminCredentials = async(id)=>{
+    const ObjectId = dbUtils.stringToObjectId(id);
+    try {
+        const admin = await Admin.findById(ObjectId);
+        await shareAdminCredentialsEmail(admin.email,admin.password,admin.firstName+" "+admin.lastName)
+        return {
+          status: 200,
+          message: "Success",
+          data: admin,
+        };
+      } catch (error) {
+        console.error(`${TAG} ERROR in shareCredentials() => ${error}`);
+        throw(error);
+      }
+  }
+
+
 export {
     getAdmins,
     setActive,
+    shareAdminCredentials
 }
