@@ -17,6 +17,23 @@ const getAdmins = async(req,res,next)=>{
     }
 }
 
+const setActive = async(req,res,next)=>{
+    try{
+        const result = await adminService.setActive(req.params.id,req.body.active);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in setActive() => ${error.message}`);
+        next(error)
+    }
+}
+
+
+
 export {
     getAdmins,
+    setActive,
 }

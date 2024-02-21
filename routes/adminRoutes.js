@@ -9,6 +9,7 @@ const initAdminRoutes = ()=>{
     const adminRoutes = express.Router();
     //adminRoutes.route('/:id/upload/image').post(isAuthenticated,isUser,multerUploads,userController.uploadImage)
     adminRoutes.route('/all').get(adminController.getAdmins)
+    adminRoutes.route('/:id/status').post(adminController.setActive)
     return adminRoutes;
   }
   

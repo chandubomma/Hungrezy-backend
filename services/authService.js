@@ -234,6 +234,12 @@ const adminSignin = async(payload)=>{
                 message : 'Admin not found! Please Signup first'
             }
         }
+        if(!admin.active){
+            return {
+                message: 'This account is not active!',
+                status: 400,
+            }
+        }
         if(!await passwordUtils.comparePasswords(admin.password,password)){
             return{
                 message: 'Incorrect Password! Please try again.',
