@@ -11,6 +11,8 @@ const initAdminRoutes = ()=>{
     adminRoutes.route('/all').get(adminController.getAdmins)
     adminRoutes.route('/:id/status').post(adminController.setActive)
     adminRoutes.route('/:id/share-credentials').post(adminController.shareAdminCredentials)
+    adminRoutes.route('/announce').post(adminController.announce)
+    adminRoutes.route("/announcements").post(adminController.getAnnouncements)
     return adminRoutes;
   }
   

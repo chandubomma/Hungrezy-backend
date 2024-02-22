@@ -12,6 +12,9 @@ import { connectToMongoDB } from "./db/mongoClient.js";
 import ErrorHandler from "./middleware/errorHandler.js";
 import helmet from "helmet";
 import rfs from "rotating-file-stream";
+import http from "http";
+
+import { Server } from "socket.io";
 
 const __filename = new URL(import.meta.url).pathname;
 // Use import.meta.url to derive __dirname
@@ -19,6 +22,27 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
+
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("Client connected");
+
+  // Handle "new-announcement" event
+  socket.on("new-announcement", (data) => {
+    // Broadcast the announcement to all clients
+    io.emit("announcement", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+});
 
 const accessLogStream = rfs.createStream("access.log", {
   interval: "1d", // rotate daily
@@ -48,7 +72,7 @@ const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
     await connectToMongoDB();
-    app.listen(port, () =>
+    httpServer.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
   } catch (error) {

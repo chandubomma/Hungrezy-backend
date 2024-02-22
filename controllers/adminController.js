@@ -45,9 +45,39 @@ const shareAdminCredentials = async(req,res,next)=>{
     }
 }
 
+const announce = async(req,res,next)=>{
+    try{
+        const result = await adminService.announce(req.body.announcement, req.body.to);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in announce() => ${error.message}`);
+        next(error)
+    }
+}
+
+const getAnnouncements = async(req,res,next)=>{
+    try{
+        const result = await adminService.getAnnouncements(req.body.to);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in getAnnouncements() => ${error.message}`);
+        next(error)
+    }
+}
+
 
 export {
     getAdmins,
     setActive,
-    shareAdminCredentials
+    shareAdminCredentials,
+    announce,
+    getAnnouncements
 }
