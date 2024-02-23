@@ -21,13 +21,15 @@ const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-  },
+  cors: corsOptions,
 });
 
 io.on("connection", (socket) => {
