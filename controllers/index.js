@@ -3,6 +3,7 @@ import * as verificationController from './verificationController.js';
 import * as restaurantController from './restaurantController.js';
 import * as userController from './userController.js';
 import * as adminController from './adminController.js';
+import * as menuController from './menuController.js';
 
 export {
     authController,
@@ -10,4 +11,5 @@ export {
     restaurantController,
     userController,
     adminController,
+    menuController
 }

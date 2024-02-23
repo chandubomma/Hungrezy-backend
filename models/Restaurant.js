@@ -46,7 +46,7 @@ const restaurantSchema = new Schema({
   area: {
     type: String,
   },
-  menu: {
+  menu_id: {
     type: Schema.Types.ObjectId,
     ref: 'Menu',
   },
