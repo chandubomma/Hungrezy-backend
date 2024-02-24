@@ -8,6 +8,7 @@ const initOrderRoutes = ()=>{
     const orderRoutes = express.Router()
 
     orderRoutes.route('/place').post(isAuthenticated,isUser,validations.placeOrder,orderController.placeOrder)
+    orderRoutes.route('/user/all/:user_id').get(isAuthenticated,isUser,orderController.getUserOrders)
 
     return orderRoutes
 }
