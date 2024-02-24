@@ -60,7 +60,7 @@ const placeOrder = async (payload) => {
     }
     const ObjectId = dbUtils.stringToObjectId(restaurant_id);
     let filter = {}
-    if(status=='all')filter.restaurantIdId = ObjectId
+    if(status=='all')filter.restaurantId = ObjectId
     else {
         filter.restaurantId = ObjectId;
         filter.status = status;
