@@ -4,6 +4,7 @@ import Restaurant from './Restaurant.js';
 import UserVerification from './UserVerification.js';
 import Announcement from './Announcement.js';
 import Menu from './Menu.js';
+import Order from './Order.js'
 
 export {
     User,
@@ -11,6 +12,7 @@ export {
     Restaurant,
     UserVerification,
     Announcement,
-    Menu
+    Menu,
+    Order,
 }
 
