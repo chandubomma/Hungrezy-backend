@@ -107,6 +107,20 @@ const updateRestaurant = async(req,res,next)=>{
     }
 }
 
+const updateRestaurantStatus = async(req,res,next)=>{
+    try{
+        const result = await restaurantService.updateRestaurantStatus(req);
+        res.status(result.status).send({
+            status : result.status,
+            message : result.message,
+            data : result.data,
+        })
+    }catch(error){
+        console.error(`${TAG} ERROR in updateRestaurantStatus() => ${error.message}`);
+        next(error)
+    }
+}
+
 
 const getMenu = async(req,res,next)=>{
     try{
@@ -152,5 +166,6 @@ export {
     getMenu,
     uploadImage,
     getLocations,
-    getRestaurantsCount
+    getRestaurantsCount,
+    updateRestaurantStatus
 }

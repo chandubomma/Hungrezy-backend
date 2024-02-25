@@ -59,10 +59,21 @@ const getRestaurantsCount = async () => {
 const getAllRestaurants = async (query) => {
   const page = parseInt(query.page);
   const perPage = parseInt(query.perPage);
+  const status = query.status;
+  const rating = query.rating;
+  const search = query.search;
+
   try {
-    const restaurants = await Restaurant.find()
-      .skip((page - 1) * perPage)
-      .limit(perPage);
+    const filter = {};
+    if (status) filter.status = status;
+    if (rating) filter.rating = { $gte: rating, $lte: rating + 1 };
+    if (search) {
+      filter.name = { $regex: `^${search}`, $options: "i" };
+    }
+
+    const restaurants = await Restaurant.find(filter)
+      .limit(perPage)
+      .skip(perPage * (page - 1));
 
     const totalRestaurants = await Restaurant.countDocuments();
 
@@ -187,6 +198,29 @@ const updateRestaurant = async (req) => {
   }
 };
 
+const updateRestaurantStatus = async (req) => {
+  const { status } = req.body;
+  const id = req.params.id;
+  try {
+    const ObjectId = dbUtils.stringToObjectId(id);
+    const restaurant = await Restaurant.findById(ObjectId);
+    if (!restaurant)
+      throw {
+        message: "Restaurant not found!",
+        status: 404,
+      };
+    restaurant.status = status;
+    await restaurant.save();
+    return {
+      status: 200,
+      message: `Restaurant ${status} successfully!`,
+      data: restaurant,
+    };
+  } catch (error) {
+    console.error(`${TAG} ERROR in updateRestaurantStatus() => ${error}`);
+  }
+};
+
 const addImageDetails = async (data) => {
   const { imageUrl, imageId, restaurantId } = data;
   if (!imageUrl && !imageId && restaurantId)
@@ -225,4 +259,5 @@ export {
   getLocations,
   updateRestaurant,
   getRestaurantsCount,
+  updateRestaurantStatus
 };
