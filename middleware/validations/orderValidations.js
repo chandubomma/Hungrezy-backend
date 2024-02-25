@@ -11,6 +11,8 @@ const placeOrder = async(req,res,next)=>{
             name: Joi.string().required(),
             quantity: Joi.number().integer().min(1).required(),
             category: Joi.string().required(),
+            price: Joi.number().integer().required(),
+            veg_or_non_veg : Joi.string().required(),
           })
         ).required(),
         address: Joi.string().required(),

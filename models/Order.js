@@ -11,7 +11,15 @@ const foodItemSchema = new Schema({
     type: Number,
     required: true,
   },
+  price: {
+    type: Number,
+    required: true,
+  },
   category: {
+    type: String,
+    required: true,
+  },
+  veg_or_non_veg: {
     type: String,
     required: true,
   },
