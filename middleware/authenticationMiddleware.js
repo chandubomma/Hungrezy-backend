@@ -13,6 +13,7 @@ const isAuthenticated = async (req, res, next) => {
             const decode = await authUtils.verifyJWT(token);
             req.user_id = decode.id
             req.user_role = decode.user_role
+            req.user_mongo_id = decode.user._id
             next();
         } else {
             res.status(401).send({

@@ -27,6 +27,34 @@ const placeOrder = async (payload) => {
     }
   };
 
+  const getOrder = async (req) => {
+    const ObjectId = dbUtils.stringToObjectId(req.params.orderId);
+    try {
+        const order = await Order.findById(ObjectId).populate('userId',"_id firstName lastName");
+        if(!order)return {
+            status : 404,
+            message : "order not found"
+        }
+        if (req.user_role === 'restaurant' && order.restaurantId.toString() !== req.user_mongo_id)return {
+            status : 403,
+            message : "Unauthorized access"
+        }
+        if (req.user_role === 'user' && order.userId.toString() !== req.user_mongo_id)return {
+            status : 403,
+            message : "Unauthorized access"
+        }
+        return {
+            status : 200,
+            message : "Order HIT!",
+            data : order
+        }
+
+    } catch (error) {
+      console.error(`${TAG} ERROR in getOrder() => ${error}`);
+      throw(error)
+    }
+  };
+
 
   const getUserOrders = async (user_id,status) => {
     if(!status)return{
@@ -53,35 +81,45 @@ const placeOrder = async (payload) => {
     }
   };
 
-  const getRestaurantOrders = async (restaurant_id,status,customerId) => {
-    if(!status)return{
-        status :400,
-        message : 'Status query required!'
-    }
+
+const getRestaurantOrders = async (restaurant_id, status, customerId) => {
+    if (!status) 
+        return {
+            status: 400,
+            message: 'Status query required!'
+        };
     const ObjectId = dbUtils.stringToObjectId(restaurant_id);
-    let filter = {}
-    if(status=='all')filter.restaurantId = ObjectId
-    else {
+    let filter = {};
+    if (status === 'all') {
+        filter.restaurantId = ObjectId;
+    } else {
         filter.restaurantId = ObjectId;
         filter.status = status;
     }
-    if(customerId)filter.userId = dbUtils.stringToObjectId(customerId);
-    try {
-      const orders = await Order.find(filter)
-      return {
-        status : 200,
-        message : 'Restaurant orders HIT!',
-        data : orders
-      }
-    } catch (error) {
-      console.error(`${TAG} ERROR in getRestaurantOrders() => ${error}`);
-      throw(error)
+    if (customerId) {
+        filter.userId = dbUtils.stringToObjectId(customerId);
     }
-  };
+    try {
+        const orders = await Order.find(filter)
+            .populate('restaurantId', '_id name email') 
+            .populate('userId', '_id firstName lastName');
+        return {
+            status: 200,
+            message: 'Restaurant orders HIT!',
+            data: orders
+        };
+    } catch (error) {
+        console.error(`${TAG} ERROR in getRestaurantOrders() => ${error}`);
+        throw error;
+    }
+};
+
+export default getRestaurantOrders;
 
 
   export {
     placeOrder,
     getUserOrders,
     getRestaurantOrders,
+    getOrder,
   }

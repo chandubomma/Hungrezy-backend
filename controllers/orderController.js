@@ -13,6 +13,16 @@ const placeOrder = async(req,res,next)=>{
     }
 }
 
+const getOrder = async(req,res,next)=>{
+    try{
+        const result = await orderService.getOrder(req)
+        res.status(result.status).send(result)
+    }catch(error){
+        console.error(`${TAG} ERROR in getOrder() => ${error}`);
+        next(error)
+    }
+}
+
 const getUserOrders = async(req,res,next)=>{
     const user_id = req.params.user_id;
     const status = req.query.status;
@@ -41,5 +51,6 @@ const getRestaurantOrders = async(req,res,next)=>{
 export {
     placeOrder,
     getUserOrders,
-    getRestaurantOrders
+    getRestaurantOrders,
+    getOrder,
 }
