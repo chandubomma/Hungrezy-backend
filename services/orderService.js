@@ -55,6 +55,40 @@ const placeOrder = async (payload) => {
     }
   };
 
+  const updateOrderStatus = async(orderId,status)=>{
+   
+    try {
+        const ObjectId = dbUtils.stringToObjectId(orderId);
+        const order = await Order.findById(ObjectId);
+        if(!order)return {
+            status : 404,
+            message : "order not found"
+        }
+        const currentStatus = order.status;
+        if(!checkValidUpdateOrderStatus(currentStatus,status))return {
+            status : 400,
+            message : "Invalid order status update request"
+        }
+        order.status = status;
+        await order.save();
+        return {
+            status : 200,
+            message : "Order status updated successfully!",
+            data : order
+        }
+        
+      } catch (error) {
+        console.error(`${TAG} ERROR in updateOrderStatus() => ${error}`);
+        throw(error)
+      }
+  }
+
+  const checkValidUpdateOrderStatus = (currentStatus,status)=>{
+    console.log(currentStatus,status)
+    if(currentStatus=='placed' && (status=='processing'||status=='delivered'||status=="cancelled"))return true;
+    if(currentStatus=='processing' && (status=='delivered'||status=='cancelled'))return true;
+    return false;
+  }
 
   const getUserOrders = async (user_id,status) => {
     if(!status)return{
@@ -122,4 +156,5 @@ export default getRestaurantOrders;
     getUserOrders,
     getRestaurantOrders,
     getOrder,
+    updateOrderStatus,
   }

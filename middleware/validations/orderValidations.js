@@ -2,7 +2,6 @@ import Joi from 'joi';
 import {validate} from './common.js';
 
 const placeOrder = async(req,res,next)=>{
-    console.log(req.body)
     const schema = Joi.object({
         userId: Joi.string().required(),
         restaurantId: Joi.string().required(),
@@ -24,7 +23,20 @@ const placeOrder = async(req,res,next)=>{
     await validate(schema,req,res,next);
 }
 
+const updateOrderStatus = async(req,res,next)=>{
+  const schema = Joi.object({
+    status : Joi.string().allow(
+      "processing",
+      "delivered",
+      "cancelled",
+    ),
+    orderId : Joi.string()
+  })
+  await validate(schema,req,res,next);
+}
+
 
 export{
     placeOrder,
+    updateOrderStatus,
 }
