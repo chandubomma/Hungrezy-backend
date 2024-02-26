@@ -103,7 +103,7 @@ const placeOrder = async (payload) => {
         filter.status = status;
     }
     try {
-      const orders = await Order.find(filter)
+      const orders = await Order.find(filter).populate('restaurantId','_id name')
       return {
         status : 200,
         message : 'User orders HIT!',
