@@ -90,6 +90,29 @@ const placeOrder = async (payload) => {
     return false;
   }
 
+  const cancelUserOrder = async(orderId)=>{
+   
+    try {
+        const ObjectId = dbUtils.stringToObjectId(orderId);
+        const order = await Order.findById(ObjectId);
+        if(!order)return {
+            status : 404,
+            message : "order not found"
+        }
+        order.status = "cancelled"
+        await order.save();
+        return {
+            status : 200,
+            message : "Order cancelled successfully!",
+            data : order
+        }
+        
+      } catch (error) {
+        console.error(`${TAG} ERROR in cancelUserOrder() => ${error}`);
+        throw(error)
+      }
+  }
+
   const getUserOrders = async (user_id,status) => {
     if(!status)return{
         status :400,
@@ -198,4 +221,5 @@ const getRestaurantOrderStats = async (restaurant_id) => {
     getOrder,
     updateOrderStatus,
     getRestaurantOrderStats,
+    cancelUserOrder,
   }

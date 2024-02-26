@@ -46,6 +46,17 @@ const getUserOrders = async(req,res,next)=>{
     }
 }
 
+const cancelUserOrder = async(req,res,next)=>{
+    const orderId = req.params.orderId;
+    try{
+        const result = await orderService.cancelUserOrder(orderId)
+        res.status(result.status).send(result)
+    }catch(error){
+        console.error(`${TAG} ERROR in cancelUserOrder() => ${error}`);
+        next(error)
+    }
+}
+
 const getRestaurantOrders = async(req,res,next)=>{
     const restaurant_id = req.params.restaurant_id;
     const status = req.query.status;
@@ -77,4 +88,5 @@ export {
     getOrder,
     updateOrderStatus,
     getRestaurantOrderStats,
+    cancelUserOrder,
 }
