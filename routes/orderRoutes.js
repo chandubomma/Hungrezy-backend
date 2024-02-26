@@ -12,7 +12,7 @@ const initOrderRoutes = ()=>{
     orderRoutes.route('/status/:orderId').post(isAuthenticated,isRestaurant,validations.updateOrderStatus,orderController.updateOrderStatus)
     orderRoutes.route('/user/:user_id').get(isAuthenticated,isUser,orderController.getUserOrders)
     orderRoutes.route('/restaurant/:restaurant_id').get(isAuthenticated,isRestaurant,orderController.getRestaurantOrders)
-
+    orderRoutes.route('/restaurant/stats/:restaurant_id').get(isAuthenticated,isRestaurant,orderController.getRestaurantOrderStats)
     return orderRoutes
 }
 

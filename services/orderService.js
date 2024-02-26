@@ -148,7 +148,47 @@ const getRestaurantOrders = async (restaurant_id, status, customerId) => {
     }
 };
 
-export default getRestaurantOrders;
+const getRestaurantOrderStats = async (restaurant_id) => {
+    const ObjectId = dbUtils.stringToObjectId(restaurant_id);
+    try {
+        const [
+            totalOrders,
+            newOrders,
+            processingOrders,
+            deliveredOrders,
+            cancelledOrders,
+            totalRevenue
+          ] = await Promise.all([
+            Order.find({ restaurantId:ObjectId }).countDocuments(),
+            Order.find({ status: "placed", restaurantId:ObjectId }).countDocuments(),
+            Order.find({ status: "processing", restaurantId:ObjectId }).countDocuments(),
+            Order.find({ status: "delivered", restaurantId:ObjectId }).countDocuments(),
+            Order.find({ status: "cancelled", restaurantId:ObjectId }).countDocuments(),
+            Order.aggregate([
+              { $match: { restaurantId: ObjectId, status: "delivered" } },
+              { $group: { _id: null, totalRevenue: { $sum: "$paymentDetails.amount" } } }
+            ])
+          ]);
+          const stats = {
+            totalOrders,
+            newOrders,
+            processingOrders,
+            deliveredOrders,
+            cancelledOrders,
+            totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].totalRevenue : 0
+          };
+          return {
+            status : 200,
+            message : "Order Stats HIT!",
+            data : stats
+          };
+    } catch (error) {
+        console.error(`${TAG} ERROR in getRestaurantOrderStats() => ${error}`);
+        throw error;
+    }
+};
+
+
 
 
   export {
@@ -157,4 +197,5 @@ export default getRestaurantOrders;
     getRestaurantOrders,
     getOrder,
     updateOrderStatus,
+    getRestaurantOrderStats,
   }

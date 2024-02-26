@@ -59,10 +59,22 @@ const getRestaurantOrders = async(req,res,next)=>{
     }
 }
 
+const getRestaurantOrderStats = async(req,res,next)=>{
+    const restaurant_id = req.params.restaurant_id;
+    try{
+        const result = await orderService.getRestaurantOrderStats(restaurant_id)
+        res.status(result.status).send(result)
+    }catch(error){
+        console.error(`${TAG} ERROR in getRestaurantOrderStats() => ${error}`);
+        next(error)
+    }
+}
+
 export {
     placeOrder,
     getUserOrders,
     getRestaurantOrders,
     getOrder,
     updateOrderStatus,
+    getRestaurantOrderStats,
 }
