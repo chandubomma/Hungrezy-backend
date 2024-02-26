@@ -29,7 +29,6 @@ const updateMenu = async (req, res, next) => {
 };
 
 const deleteMenu = async (req, res, next) => {
-  console.log(req.body);
   const schema = Joi.object({
     restaurantId: Joi.string().required(),
     menuItem: Joi.object({
