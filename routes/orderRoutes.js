@@ -14,6 +14,7 @@ const initOrderRoutes = ()=>{
     orderRoutes.route('/user/cancel/:orderId').post(isAuthenticated,isUser,orderController.cancelUserOrder)
     orderRoutes.route('/restaurant/:restaurant_id').get(isAuthenticated,isRestaurant,orderController.getRestaurantOrders)
     orderRoutes.route('/restaurant/stats/:restaurant_id').get(isAuthenticated,isRestaurant,orderController.getRestaurantOrderStats)
+    orderRoutes.route('/restaurant/stats/filters/:restaurant_id').get(isAuthenticated,isRestaurant,orderController.getRestaurantOrderStatsWithFilters)
     return orderRoutes
 }
 

@@ -6,7 +6,7 @@ const generateJWT = (payload, secret, expiresIn) => {
     return jsonwebtoken.sign(payload, secret, {expiresIn});
 };
 
-const generateAccessToken = async(payload, expiry = '1h') => {
+const generateAccessToken = async(payload, expiry = '4h') => {
     try {
         return generateJWT(payload, JWT_SECRET, expiry);
     } catch (error) {

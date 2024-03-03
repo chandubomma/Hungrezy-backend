@@ -212,6 +212,87 @@ const getRestaurantOrderStats = async (restaurant_id) => {
 };
 
 
+const getRestaurantOrderStatsWithFilters = async (req) => {
+  const restaurantId = dbUtils.stringToObjectId(req.params.restaurant_id);
+  const { status, date, customerId } = req.query;
+  let matchFilter = { restaurantId };
+
+  if (status && status!='all') matchFilter.status = status;
+  if (customerId && customerId!='all') matchFilter.userId = dbUtils.stringToObjectId(customerId);
+  if (date && date!='all') matchFilter = getDateFilter(matchFilter, date);
+
+  try {
+    const result = await Order.aggregate([
+      { $match: matchFilter },
+      { $group: {
+        _id: null,
+        totalOrders: { $sum: 1 },
+        averageRevenuePerOrder: { $avg: '$paymentDetails.amount' },
+        totalRevenue: { $sum: '$paymentDetails.amount' },
+        mostFrequentCategories: { $addToSet: '$foodItems.category' },
+        mostFrequentFoodItems: { $addToSet: '$foodItems.name' },
+      }},
+      { $project: {
+        totalOrders: 1,
+        averageRevenuePerOrder: 1,
+        totalRevenue: 1,
+        mostFrequentCategory: { $slice: ['$mostFrequentCategories', 1] },
+        mostFrequentFoodItem: { $slice: ['$mostFrequentFoodItems', 1] },
+      }},
+      { $unwind: { path: '$mostFrequentCategory', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: '$mostFrequentFoodItem', preserveNullAndEmptyArrays: true } },
+    ]);
+
+    let stats = result[0];
+    if (!stats) {
+      stats = { 
+        totalOrders: 0,
+        averageRevenuePerOrder: 0, 
+        totalRevenue: 0, 
+        mostFrequentCategory: null, 
+        mostFrequentFoodItem: null 
+      };
+    }
+
+    return {
+      status: 200,
+      message: 'Orders Stats HIT!',
+      data: stats
+    };
+  } catch (error) {
+    console.error(`${TAG} ERROR in getRestaurantOrderStatsWithFilters() => ${error}`);
+    throw error;
+  }
+};
+
+
+
+const getDateFilter = (filter,date)=>{
+  if (date === 'today') {
+    filter.orderedAt = { $gte: new Date(new Date().setHours(0, 0, 0)), $lt: new Date(new Date().setHours(23, 59, 59)) };
+  } else if (date === 'last-week') {
+    const startOfWeek = new Date();
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Get the first day of the current week
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Get the last day of the current week
+    filter.orderedAt = { $gte: startOfWeek, $lt: endOfWeek };
+  } else if (date === 'last-month') {
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1); // Get the first day of the current month
+    const endOfMonth = new Date(startOfMonth);
+    endOfMonth.setMonth(endOfMonth.getMonth() + 1); // Get the first day of the next month
+    filter.orderedAt = { $gte: startOfMonth, $lt: endOfMonth };
+  } else if (date === 'last-year') {
+    const startOfYear = new Date();
+    startOfYear.setMonth(0, 1); // Get the first day of the current year
+    const endOfYear = new Date(startOfYear);
+    endOfYear.setFullYear(endOfYear.getFullYear() + 1); // Get the first day of the next year
+    filter.orderedAt = { $gte: startOfYear, $lt: endOfYear };
+  }
+  return filter;
+}
+
+
 
 
   export {
@@ -222,4 +303,5 @@ const getRestaurantOrderStats = async (restaurant_id) => {
     updateOrderStatus,
     getRestaurantOrderStats,
     cancelUserOrder,
+    getRestaurantOrderStatsWithFilters,
   }
