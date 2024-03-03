@@ -10,7 +10,7 @@ const initOrderRoutes = ()=>{
     orderRoutes.route('/place').post(isAuthenticated,isUser,validations.placeOrder,orderController.placeOrder)
     orderRoutes.route('/:orderId').get(isAuthenticated,orderController.getOrder)
     orderRoutes.route('/status/:orderId').post(isAuthenticated,isRestaurant,validations.updateOrderStatus,orderController.updateOrderStatus)
-    orderRoutes.route('/user/:user_id').get(isAuthenticated,isUser,orderController.getUserOrders)
+    orderRoutes.route('/user/:user_id').get(orderController.getUserOrders)
     orderRoutes.route('/user/cancel/:orderId').post(isAuthenticated,isUser,orderController.cancelUserOrder)
     orderRoutes.route('/restaurant/:restaurant_id').get(isAuthenticated,isRestaurant,orderController.getRestaurantOrders)
     orderRoutes.route('/restaurant/stats/:restaurant_id').get(isAuthenticated,isRestaurant,orderController.getRestaurantOrderStats)

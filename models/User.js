@@ -27,7 +27,11 @@ const userSchema = new Schema({
   },
   imageId: {
     type: String,
-  } 
+  },
+  status: {
+    type: String,
+    default: "active",
+  },
 },{
   timestamps: true
 });
