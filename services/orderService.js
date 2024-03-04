@@ -299,8 +299,8 @@ const getRestaurantOrderStatsWithFilters = async (req) => {
         totalOrders: 0,
         averageRevenuePerOrder: 0,
         totalRevenue: 0,
-        mostFrequentCategory: null,
-        mostFrequentFoodItem: null,
+        mostFrequentCategory: ['NA'],
+        mostFrequentFoodItem: ['NA'],
       };
     }
 
