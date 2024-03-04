@@ -104,4 +104,106 @@ const updateCustomerStatus = async (req) => {
   }
 };
 
-export { addImageDetails, getAllUsers, getUserDetails, updateCustomerStatus };
+const getCustomerCount = async () => {
+  try {
+    const [totalUsers, activeUsers, inActiveUsers] = await Promise.all([
+      User.countDocuments(),
+      User.find({ status: "active" }).countDocuments(),
+      User.find({ status: "inactive" }).countDocuments(),
+    ]);
+
+    const monthlyUsers = await User.aggregate([
+      {
+        $group: {
+          _id: {
+            $month: "$createdAt",
+          },
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $let: {
+              vars: {
+                monthsInString: [
+                  null,
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                  "May",
+                  "June",
+                  "July",
+                  "August",
+                  "September",
+                  "October",
+                  "November",
+                  "December",
+                ],
+              },
+              in: {
+                $arrayElemAt: ["$$monthsInString", "$_id"],
+              },
+            },
+          },
+          count: { $ifNull: ["$count", 0] },
+        },
+      },
+      {
+        $sort: { month: 1 },
+      },
+    ]);
+
+    const allMonths = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const mergedData = allMonths.map((month) => {
+      const existingData = monthlyUsers.find((item) => item.month === month);
+      if (existingData) {
+        return {
+          month,
+          customers: existingData.count,
+        };
+      } else {
+        return { month, customers: 0 };
+      }
+    });
+
+    return {
+      status: 200,
+      message: "Customer count fetched successfully",
+      data: {
+        totalUsers,
+        activeUsers,
+        inActiveUsers,
+        monthlyUsers: mergedData,
+      },
+    };
+  } catch (error) {
+    console.error(`${TAG} ERROR in getCustomerCount() => ${error}`);
+  }
+};
+
+export {
+  addImageDetails,
+  getAllUsers,
+  getUserDetails,
+  updateCustomerStatus,
+  getCustomerCount,
+};

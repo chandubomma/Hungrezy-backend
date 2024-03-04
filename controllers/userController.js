@@ -64,4 +64,18 @@ const updateCustomerStatus = async (req, res, next) => {
   }
 };
 
-export { uploadImage, getAllUsers, getUserDetails, updateCustomerStatus };
+const getCustomerCount = async (req, res, next) => {
+  try {
+    const result = await userService.getCustomerCount();
+    res.status(result.status).send({
+      status: result.status,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(`${TAG} ERROR in getCustomerCount() => ${error.message}`);
+    next(error);
+  }
+};
+
+export { uploadImage, getAllUsers, getUserDetails, updateCustomerStatus, getCustomerCount };

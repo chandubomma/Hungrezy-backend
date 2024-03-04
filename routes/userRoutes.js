@@ -10,8 +10,10 @@ const initUserRoutes = () => {
   userRoutes
     .route("/:id/upload/image")
     .post(isAuthenticated, isUser, multerUploads, userController.uploadImage);
-  userRoutes.route("/all").post(userController.getAllUsers)
+  userRoutes.route("/all").post(userController.getAllUsers);
+  userRoutes.route("/count").get(userController.getCustomerCount);
   userRoutes.route("/:id").get(userController.getUserDetails);
+
   userRoutes
     .route("/:id/updateStatus")
     .put(

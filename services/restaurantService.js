@@ -41,14 +41,92 @@ const getRestaurantsCount = async () => {
       Restaurant.find({ status: "inprogress" }).countDocuments(),
     ]);
 
+    const monthlyRestaurants = await Restaurant.aggregate([
+      {
+        $group: {
+          _id: {
+            $month: "$createdAt",
+          },
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $let: {
+              vars: {
+                monthsInString: [
+                  null,
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                  "May",
+                  "June",
+                  "July",
+                  "August",
+                  "September",
+                  "October",
+                  "November",
+                  "December",
+                ],
+              },
+              in: {
+                $arrayElemAt: ["$$monthsInString", "$_id"],
+              },
+            },
+          },
+          count: { $ifNull: ["$count", 0] },
+        },
+      },
+      {
+        $sort: { month: 1 },
+      },
+    ]);
+
+    const allMonths = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const mergedData = allMonths.map((month) => {
+      const existingData = monthlyRestaurants.find(
+        (item) => item.month === month
+      );
+      if (existingData) {
+        return {
+          month,
+          restaurants: existingData.count,
+        };
+      } else {
+        return { month, restaurants: 0 };
+      }
+    });
+
     return {
       status: 200,
       message: "Get Restaurants Count Successful!",
-      total: totalRestaurants,
-      approved: approvedRestaurants,
-      suspended: suspendedRestaurants,
-      rejected: rejectedRestaurants,
-      inprogress: inprogressRestaurants,
+      data: {
+        total: totalRestaurants,
+        approved: approvedRestaurants,
+        suspended: suspendedRestaurants,
+        rejected: rejectedRestaurants,
+        inprogress: inprogressRestaurants,
+        monthlyRestaurants: mergedData,
+      },
     };
   } catch (error) {
     console.error(`${TAG} ERROR in getLocations() => ${error}`);
@@ -122,7 +200,7 @@ const getRestaurantById = async (id) => {
     };
   try {
     const ObjectId = dbUtils.stringToObjectId(id);
-    const restaurant = await Restaurant.findById(ObjectId).populate('menu_id');
+    const restaurant = await Restaurant.findById(ObjectId).populate("menu_id");
     return {
       status: 200,
       message: "Restaurant HIT!",
@@ -259,5 +337,5 @@ export {
   getLocations,
   updateRestaurant,
   getRestaurantsCount,
-  updateRestaurantStatus
+  updateRestaurantStatus,
 };

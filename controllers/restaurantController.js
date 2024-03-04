@@ -22,11 +22,7 @@ const getRestaurantsCount = async(req,res,next)=>{
         res.status(result.status).send({
             status : result.status,
             message : result.message,
-            approved : result.approved,
-            suspended : result.suspended,
-            rejected : result.rejected,
-            inprogress : result.inprogress,
-            total : result.total,
+            data: result.data
         })
     }catch(error){
         console.error(`${TAG} ERROR in getRestaurantsCount() => ${error.message}`);

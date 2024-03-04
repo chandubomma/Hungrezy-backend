@@ -91,6 +91,16 @@ const getRestaurantOrderStatsWithFilters = async(req,res,next)=>{
     }
 }
 
+const getOrderCount = async(req,res,next)=>{
+    try{
+        const result = await orderService.getOrderCount()
+        res.status(result.status).send(result)
+    }catch(error){
+        console.error(`${TAG} ERROR in getOrderCount() => ${error}`);
+        next(error)
+    }
+}
+
 export {
     placeOrder,
     getUserOrders,
@@ -100,4 +110,5 @@ export {
     getRestaurantOrderStats,
     cancelUserOrder,
     getRestaurantOrderStatsWithFilters,
+    getOrderCount
 }
