@@ -16,6 +16,20 @@ const sendReviewMessage = async (req, res, next) => {
   }
 };
 
+const addRestaurantReview = async (req, res, next) => {
+  try {
+    const result = await reviewService.addRestaurantReview(req);
+    res.status(result.status).send({
+      status: result.status,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(`${TAG} ERROR in addRestaurantReview() => ${error.message}`);
+    next(error);
+  }
+};
+
 const getReviewMessages = async (req, res, next) => {
   try {
     const result = await reviewService.getReviewMessages();
@@ -30,4 +44,18 @@ const getReviewMessages = async (req, res, next) => {
   }
 };
 
-export { sendReviewMessage, getReviewMessages };
+const getRestaurantReviews = async (req, res, next) => {
+  try {
+    const result = await reviewService.getRestaurantReviews(req.params.restaurantId);
+    res.status(result.status).send({
+      status: result.status,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(`${TAG} ERROR in getRestaurantReviews() => ${error.message}`);
+    next(error);
+  }
+};
+
+export { sendReviewMessage, getReviewMessages,addRestaurantReview,getRestaurantReviews };

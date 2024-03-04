@@ -7,6 +7,7 @@ import Menu from "./Menu.js";
 import Order from "./Order.js";
 import Contact from "./Contact.js";
 import Review from "./Review.js";
+import RestaurantReview from "./RestaurantReview.js";
 
 export {
   User,
@@ -18,4 +19,5 @@ export {
   Order,
   Contact,
   Review,
+  RestaurantReview,
 };

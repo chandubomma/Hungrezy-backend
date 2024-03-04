@@ -1,4 +1,4 @@
-import { Review } from "../models/index.js";
+import { Review,RestaurantReview } from "../models/index.js";
 
 const TAG = "service.review";
 
@@ -21,6 +21,29 @@ const sendReviewMessage = async (review) => {
   }
 };
 
+
+const addRestaurantReview = async (req) => {
+  try {
+    const {userId,rating,review}=req.body;
+    const restaurantId = req.params.restaurantId;
+    let newReview = new RestaurantReview({
+      restaurantId:restaurantId,
+      userId:userId,
+      rating:rating,
+      review:review
+    })
+    await newReview.save()
+    return {
+      status: 200,
+      message: "Success",
+      data: newReview,
+    };
+  } catch (error) {
+    console.error(`${TAG} ERROR in addRestaurantReview() => ${error}`);
+    throw error;
+  }
+};
+
 const getReviewMessages = async () => {
   try {
     const contacts = await Review.find();
@@ -35,4 +58,18 @@ const getReviewMessages = async () => {
   }
 };
 
-export { sendReviewMessage, getReviewMessages };
+const getRestaurantReviews = async (restaurantId) => {
+  try {
+    const reviews = await RestaurantReview.find({restaurantId}).populate('userId','_id firstName lastName image');
+    return {
+      status: 200,
+      message: "Success",
+      data: reviews,
+    };
+  } catch (error) {
+    console.error(`${TAG} ERROR in getRestaurantReviews() => ${error}`);
+    throw error;
+  }
+};
+
+export { sendReviewMessage, getReviewMessages, addRestaurantReview,getRestaurantReviews };

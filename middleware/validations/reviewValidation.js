@@ -10,4 +10,14 @@ const sendReviewMessage = async (req, res, next) => {
   await validate(schema, req, res, next);
 };
 
-export { sendReviewMessage };
+const addRestaurantReview = async(req,res,next)=>{
+  const schema = Joi.object({
+    restaurantId: Joi.string().required(),
+    userId: Joi.string().required(),
+    rating: Joi.number().min(1).max(5).required(),
+    review: Joi.string().required(),
+  });
+  await validate(schema, req, res, next);
+}
+
+export { sendReviewMessage, addRestaurantReview };
