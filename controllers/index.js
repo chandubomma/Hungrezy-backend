@@ -6,6 +6,7 @@ import * as adminController from "./adminController.js";
 import * as menuController from "./menuController.js";
 import * as orderController from "./orderController.js";
 import * as contactController from "./contactController.js";
+import * as reviewController from "./reviewController.js";
 
 export {
   authController,
@@ -16,4 +17,5 @@ export {
   menuController,
   orderController,
   contactController,
+  reviewController,
 };

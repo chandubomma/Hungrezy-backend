@@ -6,6 +6,7 @@ import Announcement from "./Announcement.js";
 import Menu from "./Menu.js";
 import Order from "./Order.js";
 import Contact from "./Contact.js";
+import Review from "./Review.js";
 
 export {
   User,
@@ -16,4 +17,5 @@ export {
   Menu,
   Order,
   Contact,
+  Review,
 };

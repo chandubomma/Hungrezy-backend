@@ -6,6 +6,7 @@ import express from "express";
 import initMenuRoutes from "./menuRoutes.js";
 import initOrderRoutes from "./orderRoutes.js";
 import initContactRoutes from "./contactRoutes.js";
+import initReviewRoutes from "./reviewRoutes.js";
 
 const initRoutes = () => {
   const router = express.Router();
@@ -17,6 +18,7 @@ const initRoutes = () => {
   router.use("/menu", initMenuRoutes());
   router.use("/order",initOrderRoutes());
   router.use("/contact", initContactRoutes())
+  router.use("/review", initReviewRoutes());
   
   return router;
 };

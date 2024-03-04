@@ -7,6 +7,7 @@ import * as adminService from "./adminService.js";
 import * as menuService from "./menuService.js";
 import * as orderService from "./orderService.js";
 import * as contactService from "./contactService.js";
+import * as reviewService from "./reviewService.js";
 
 export {
   emailService,
@@ -18,4 +19,5 @@ export {
   menuService,
   orderService,
   contactService,
+  reviewService,
 };
