@@ -228,6 +228,55 @@ const getRestaurantOrderStats = async (restaurant_id) => {
         },
       ]),
     ]);
+
+    const quarterlyOrders = await Order.aggregate([
+      {
+        $match: {
+          restaurantId: ObjectId, 
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $switch: {
+              branches: [
+                { case: { $and: [{ $lte: [{ $month: "$orderedAt" }, 3] }, { $gte: [{ $month: "$orderedAt" }, 1] }] }, then: "Jan-Mar" },
+                { case: { $and: [{ $lte: [{ $month: "$orderedAt" }, 6] }, { $gte: [{ $month: "$orderedAt" }, 4] }] }, then: "Apr-Jun" },
+                { case: { $and: [{ $lte: [{ $month: "$orderedAt" }, 9] }, { $gte: [{ $month: "$orderedAt" }, 7] }] }, then: "Jul-Sep" },
+                { case: { $and: [{ $lte: [{ $month: "$orderedAt" }, 12] }, { $gte: [{ $month: "$orderedAt" }, 10] }] }, then: "Oct-Dec" },
+              ],
+              default: "Unknown"
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          quarter: "$_id",
+          count: { $ifNull: ["$count", 0] },
+        },
+      },
+      {
+        $sort: { quarter: 1 },
+      },
+    ]);
+    
+    const quarters = ["Jan-Mar", "Apr-Jun", "Jul-Sep", "Oct-Dec"];
+    
+    const mergedData = quarters.map((quarter) => {
+      const existingData = quarterlyOrders.find((item) => item.quarter === quarter);
+      if (existingData) {
+        return {
+          quarter,
+          orders: existingData.count,
+        };
+      } else {
+        return { quarter, orders: 0 };
+      }
+    });
+
     const stats = {
       totalOrders,
       newOrders,
@@ -235,7 +284,9 @@ const getRestaurantOrderStats = async (restaurant_id) => {
       deliveredOrders,
       cancelledOrders,
       totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].totalRevenue : 0,
+      quarterlyOrders: mergedData,
     };
+
     return {
       status: 200,
       message: "Order Stats HIT!",
@@ -299,8 +350,8 @@ const getRestaurantOrderStatsWithFilters = async (req) => {
         totalOrders: 0,
         averageRevenuePerOrder: 0,
         totalRevenue: 0,
-        mostFrequentCategory: ['NA'],
-        mostFrequentFoodItem: ['NA'],
+        mostFrequentCategory: ["NA"],
+        mostFrequentFoodItem: ["NA"],
       };
     }
 
