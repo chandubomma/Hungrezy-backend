@@ -5,7 +5,8 @@ import * as imageUploadService from "./imageUploadService.js";
 import * as userService from "./userService.js";
 import * as adminService from "./adminService.js";
 import * as menuService from "./menuService.js";
-import * as orderService from './orderService.js';
+import * as orderService from "./orderService.js";
+import * as contactService from "./contactService.js";
 
 export {
   emailService,
@@ -16,4 +17,5 @@ export {
   adminService,
   menuService,
   orderService,
+  contactService,
 };

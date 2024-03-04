@@ -1,18 +1,19 @@
-import User from './User.js';
-import Admin from './Admin.js';
-import Restaurant from './Restaurant.js';
-import UserVerification from './UserVerification.js';
-import Announcement from './Announcement.js';
-import Menu from './Menu.js';
-import Order from './Order.js'
+import User from "./User.js";
+import Admin from "./Admin.js";
+import Restaurant from "./Restaurant.js";
+import UserVerification from "./UserVerification.js";
+import Announcement from "./Announcement.js";
+import Menu from "./Menu.js";
+import Order from "./Order.js";
+import Contact from "./Contact.js";
 
 export {
-    User,
-    Admin,
-    Restaurant,
-    UserVerification,
-    Announcement,
-    Menu,
-    Order,
-}
-
+  User,
+  Admin,
+  Restaurant,
+  UserVerification,
+  Announcement,
+  Menu,
+  Order,
+  Contact,
+};
