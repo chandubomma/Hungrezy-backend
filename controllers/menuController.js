@@ -4,7 +4,7 @@ const TAG = "controller.menu";
 
 const getMenuById = async (req, res, next) => {
   try {
-    const result = await menuService.getMenuById(req.params.id);
+    const result = await menuService.getMenuById(req.params.id, req.query);
     res.status(result.status).send({
       status: result.status,
       message: result.message,

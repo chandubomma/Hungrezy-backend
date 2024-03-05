@@ -6,9 +6,7 @@ import { isRestaurant } from "../middleware/permissionsMiddleware.js";
 
 const initMenuRoutes = () => {
   const menuRoutes = express.Router();
-  menuRoutes
-    .route("/:id")
-    .get(isAuthenticated, isRestaurant, menuController.getMenuById);
+  menuRoutes.route("/:id").get(menuController.getMenuById);
   menuRoutes
     .route("/addMenu")
     .post(

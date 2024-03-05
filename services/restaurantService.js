@@ -200,7 +200,7 @@ const getRestaurantById = async (id) => {
     };
   try {
     const ObjectId = dbUtils.stringToObjectId(id);
-    const restaurant = await Restaurant.findById(ObjectId).populate("menu_id");
+    const restaurant = await Restaurant.findById(ObjectId);
     return {
       status: 200,
       message: "Restaurant HIT!",

@@ -3,7 +3,7 @@ import Restaurant from "../models/Restaurant.js";
 
 const TAG = "service.menu";
 
-const getMenuById = async (id) => {
+const getMenuById = async (id, query) => {
   try {
     const menu = await Menu.findOne({ _id: id });
     if (!menu) {
@@ -11,6 +11,19 @@ const getMenuById = async (id) => {
         status: 404,
         message: "Menu not found",
       };
+    }
+
+    if(query && query.availability){
+      const availability = query.availability === 'true' ? true : false;
+      const categories = Object.keys(menu._doc);
+      categories.forEach(category => {
+        const items = Object.keys(menu._doc[category]);
+        items.forEach(item => {
+          if(menu._doc[category][item].availability !== availability){
+            delete menu._doc[category][item];
+          }
+        })
+      })
     }
 
     return {
@@ -38,7 +51,7 @@ const addMenu = async (menu) => {
     if (!menuId) {
       const newMenuData = {
         [category]: {
-          [name]: { price, veg_or_non_veg, available: true },
+          [name]: { price, veg_or_non_veg, availability: true },
         },
       };
       const newMenu = await Menu.create(newMenuData);
@@ -71,7 +84,7 @@ const addMenu = async (menu) => {
       menuId,
       {
         $set: {
-          [`${category}.${name}`]: { price, veg_or_non_veg, available: true },
+          [`${category}.${name}`]: { price, veg_or_non_veg, availability: true },
         },
       },
       { new: true }
@@ -128,7 +141,7 @@ const updateMenu = async (menu) => {
       menuId,
       {
         $set: {
-          [`${category}.${name}`]: { price, veg_or_non_veg, available },
+          [`${category}.${name}`]: { price, veg_or_non_veg, availability: available},
         },
       },
       { new: true }
@@ -190,7 +203,7 @@ const deleteMenu = async (menu) => {
       },
       { new: true }
     );
-
+``
     return {
       status: 200,
       message: "Menu item deleted successfully",
