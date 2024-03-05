@@ -13,6 +13,12 @@ const signin = async (payload) => {
         message: "User not found! Please Signup first",
       };
     }
+    if(user.status !== "active"){
+      return {
+        status: 400,
+        message: `Your account is ${user.status}! Please contact admin for more details.`
+      };
+    }
     if (!(await passwordUtils.comparePasswords(user.password, password))) {
       return {
         message: "Incorrect Password! Please try again.",
@@ -54,6 +60,13 @@ const signinSendOtp = async (payload) => {
         message: "User not found! Please Signup first",
       };
     }
+    if(user.status !== "active"){
+      return {
+        status: 400,
+        message: `Your account is ${user.status}! Please contact admin for more details.`
+      };
+    }
+
     const verificationCode = passwordUtils.generateRandomOTP(6);
     let userVerification = await UserVerification.findOne({ email, user_role });
     if (userVerification) {
