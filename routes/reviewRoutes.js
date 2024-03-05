@@ -10,6 +10,7 @@ const initReviewRoutes = () => {
     .route("/")
     .post(validations.sendReviewMessage, reviewController.sendReviewMessage);
   reviewRoutes.route("/").get(reviewController.getReviewMessages);
+  reviewRoutes.route("/top").get(reviewController.getTopReviews);
   reviewRoutes.route("/restaurant/:restaurantId").post(isAuthenticated,isUser,validations.addRestaurantReview,reviewController.addRestaurantReview);
   reviewRoutes.route("/restaurant/:restaurantId").get(reviewController.getRestaurantReviews)
   return reviewRoutes;

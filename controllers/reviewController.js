@@ -44,9 +44,25 @@ const getReviewMessages = async (req, res, next) => {
   }
 };
 
+const getTopReviews = async (req, res, next) => {
+  try {
+    const result = await reviewService.getTopReviews();
+    res.status(result.status).send({
+      status: result.status,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(`${TAG} ERROR in getTopReviews() => ${error.message}`);
+    next(error);
+  }
+};
+
 const getRestaurantReviews = async (req, res, next) => {
   try {
-    const result = await reviewService.getRestaurantReviews(req.params.restaurantId);
+    const result = await reviewService.getRestaurantReviews(
+      req.params.restaurantId
+    );
     res.status(result.status).send({
       status: result.status,
       message: result.message,
@@ -58,4 +74,10 @@ const getRestaurantReviews = async (req, res, next) => {
   }
 };
 
-export { sendReviewMessage, getReviewMessages,addRestaurantReview,getRestaurantReviews };
+export {
+  sendReviewMessage,
+  getReviewMessages,
+  addRestaurantReview,
+  getRestaurantReviews,
+  getTopReviews,
+};

@@ -399,11 +399,13 @@ const getDateFilter = (filter, date) => {
 const getOrderCount = async () => {
   try {
     const totalOrders = await Order.countDocuments();
+    const deliveredOrders = await Order.find({ status: "delivered" }).countDocuments();
     return {
       status: 200,
       message: "Order count HIT!",
       data: {
         totalOrders,
+        deliveredOrders,
       },
     };
   } catch (error) {
