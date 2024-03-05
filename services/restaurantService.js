@@ -12,7 +12,7 @@ const getRestaurants = async (query) => {
       message: "Invalid query parameters",
       status: 400,
     };
-  const filter = { city, area };
+  const filter = { city, area, status: "approved" };
   try {
     const restaurants = await Restaurant.find(filter);
     return {
