@@ -1,4 +1,5 @@
 import { Restaurant } from "../models/index.js";
+import { getOrSetCache } from "../redis/getOrSetCache.js";
 import { dbUtils } from "../utils/index.js";
 import { getAllFoodItems } from "./mongoService.js";
 
@@ -13,16 +14,22 @@ const getRestaurants = async (query) => {
       status: 400,
     };
   const filter = { city, area, status: "approved" };
-  try {
-    const restaurants = await Restaurant.find(filter);
-    return {
-      status: 200,
-      message: "Get Restaurants Successful!",
-      data: restaurants,
-    };
-  } catch (error) {
-    console.error(`${TAG} ERROR in getRestaurants() => ${error}`);
-  }
+  const restaurants = await getOrSetCache(
+    `restaurants-${city}-${area}`,
+    async () => {
+      try {
+        const restaurants = await Restaurant.find(filter);
+        return {
+          status: 200,
+          message: "Get Restaurants Successful!",
+          data: restaurants,
+        };
+      } catch (error) {
+        console.error(`${TAG} ERROR in getRestaurants() => ${error}`);
+      }
+    }
+  );
+  return restaurants;
 };
 
 const getRestaurantsCount = async () => {
@@ -174,18 +181,22 @@ const getAllRestaurants = async (query) => {
 
 const getLocations = async () => {
   try {
-    const citiesWithAreas = await Restaurant.aggregate([
-      { $group: { _id: "$city", areas: { $addToSet: "$area" } } },
-    ]);
-    const citiesAndAreas = {};
-    citiesWithAreas.forEach(({ _id, areas }) => {
-      citiesAndAreas[_id] = areas;
+    const citiesWithAreas = await getOrSetCache("citiesWithAreas", async () => {
+      const citiesWithAreas = await Restaurant.aggregate([
+        { $group: { _id: "$city", areas: { $addToSet: "$area" } } },
+      ]);
+      const citiesAndAreas = {};
+      citiesWithAreas.forEach(({ _id, areas }) => {
+        citiesAndAreas[_id] = areas;
+      });
+      return {
+        status: 200,
+        message: "Locations HIT!",
+        data: citiesAndAreas,
+      };
     });
-    return {
-      status: 200,
-      message: "Locations HIT!",
-      data: citiesAndAreas,
-    };
+
+    return citiesWithAreas;
   } catch (error) {
     console.error(`${TAG} ERROR in getLocations() => ${error}`);
     throw error;

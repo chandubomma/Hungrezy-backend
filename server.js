@@ -13,7 +13,6 @@ import ErrorHandler from "./middleware/errorHandler.js";
 import helmet from "helmet";
 import rfs from "rotating-file-stream";
 import http from "http";
-
 import { Server } from "socket.io";
 
 const __filename = new URL(import.meta.url).pathname;
@@ -22,7 +21,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const corsOptions = {
-  origin: ["http://localhost:5173","https://hungrezy.vercel.app"],
+  origin: ["http://localhost:5173", "https://hungrezy.vercel.app"],
   credentials: true,
 };
 app.use(cors(corsOptions));
