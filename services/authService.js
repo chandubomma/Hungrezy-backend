@@ -2,46 +2,60 @@ import { passwordUtils, authUtils } from "../utils/index.js";
 import { emailService } from "./index.js";
 import { User, Restaurant, Admin, UserVerification } from "../models/index.js";
 import * as Constants from "../constants/userRoleConstants.js";
+import { getOrSetCache } from "../redis/getOrSetCache.js";
+import client from "../redis/client.js";
 
 const signin = async (payload) => {
   const { email, password } = payload;
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
+    const cachedUser = await getOrSetCache(`user-${email}`, async () => {
+      const user = await User.findOne({ email });
+      return user;
+    });
+    if (!cachedUser) {
       return {
         status: 400,
         message: "User not found! Please Signup first",
       };
     }
-    if(user.status !== "active"){
+    if (cachedUser.status !== "active") {
       return {
         status: 400,
-        message: `Your account is ${user.status}! Please contact admin for more details.`
+        message: `Your account is ${cachedUser.status}! Please contact admin for more details.`,
       };
     }
-    if (!(await passwordUtils.comparePasswords(user.password, password))) {
+    if (
+      !(await passwordUtils.comparePasswords(cachedUser.password, password))
+    ) {
       return {
-        message: "Incorrect Password! Please try again.",
         status: 400,
+        message: "Incorrect Password! Please try again.",
       };
     }
     const accessToken = await authUtils.generateAccessToken({
-      id: user.email,
+      id: cachedUser.email,
       user_role: Constants.USER_ROLE,
-      user,
+      user: cachedUser,
     });
-    const refreshToken = await authUtils.generateRefreshToken({ user });
-    const token = {};
-    token.accessToken = accessToken;
-    token.refreshToken = refreshToken;
-    token.user = user;
+    const refreshToken = await authUtils.generateRefreshToken({
+      user: cachedUser,
+    });
+    const token = {
+      accessToken,
+      refreshToken,
+      user: cachedUser,
+    };
     return {
       status: 200,
-      message: "Sign in Successfull!",
-      token: token,
+      message: "Sign in Successful!",
+      token,
     };
   } catch (error) {
     console.error(error);
+    return {
+      status: 500,
+      message: "Internal Server Error",
+    };
   }
 };
 
@@ -60,10 +74,10 @@ const signinSendOtp = async (payload) => {
         message: "User not found! Please Signup first",
       };
     }
-    if(user.status !== "active"){
+    if (user.status !== "active") {
       return {
         status: 400,
-        message: `Your account is ${user.status}! Please contact admin for more details.`
+        message: `Your account is ${user.status}! Please contact admin for more details.`,
       };
     }
 
@@ -175,22 +189,28 @@ const signup = async (payload) => {
 const restaurantSignin = async (payload) => {
   const { email, password } = payload;
   try {
-    const restaurant = await Restaurant.findOne({ email });
-    if (!restaurant) {
+    const cachedRestaurant = await getOrSetCache(`restaurant-${email}`, async () => {
+      const restaurant = await Restaurant.findOne({ email });
+      return restaurant;
+    });
+    if (!cachedRestaurant) {
       return {
         status: 400,
         message: "Restaurant not found! Please Signup first",
       };
     }
-    if (restaurant.status !== "approved") {
+    if (cachedRestaurant.status !== "approved") {
       return {
         status: 400,
-        message: `Your account is ${restaurant.status}! Please contact admin for more details.`
+        message: `Your account is ${cachedRestaurant.status}! Please contact admin for more details.`,
       };
     }
 
     if (
-      !(await passwordUtils.comparePasswords(restaurant.password, password))
+      !(await passwordUtils.comparePasswords(
+        cachedRestaurant.password,
+        password
+      ))
     ) {
       return {
         message: "Incorrect Password! Please try again.",
@@ -198,15 +218,17 @@ const restaurantSignin = async (payload) => {
       };
     }
     const accessToken = await authUtils.generateAccessToken({
-      id: restaurant.email,
+      id: cachedRestaurant.email,
       user_role: Constants.USER_ROLE_RESTAURANT,
-      user: restaurant,
+      user: cachedRestaurant,
     });
-    const refreshToken = await authUtils.generateRefreshToken({ restaurant });
+    const refreshToken = await authUtils.generateRefreshToken({
+      cachedRestaurant,
+    });
     const token = {};
     token.accessToken = accessToken;
     token.refreshToken = refreshToken;
-    token.user = restaurant;
+    token.user = cachedRestaurant;
     return {
       status: 200,
       message: "Sign in Successfull!",
@@ -263,14 +285,17 @@ const restaurantSignup = async (payload) => {
 const adminSignin = async (payload) => {
   const { email, password } = payload;
   try {
-    const admin = await Admin.findOne({ email });
-    if (!admin) {
+    const cachedAdmin = await getOrSetCache(`admin-${email}`, async () => {
+      const admin = await Admin.findOne({ email });
+      return admin;
+    });
+    if (!cachedAdmin) {
       return {
         status: 400,
         message: "Admin not found! Please Signup first",
       };
     }
-    if (!admin.active) {
+    if (!cachedAdmin.active) {
       return {
         message: "This account is not active!",
         status: 400,
@@ -283,17 +308,17 @@ const adminSignin = async (payload) => {
     //     }
     // }
     const accessToken = await authUtils.generateAccessToken({
-      id: admin.email,
-      user_role: admin.superAdmin
+      id: cachedAdmin.email,
+      user_role: cachedAdmin.superAdmin
         ? Constants.USER_ROLE_SUPERADMIN
         : Constants.USER_ROLE_ADMIN,
-      user: admin,
+      user: cachedAdmin,
     });
-    const refreshToken = await authUtils.generateRefreshToken({ admin });
+    const refreshToken = await authUtils.generateRefreshToken({ cachedAdmin });
     const token = {};
     token.accessToken = accessToken;
     token.refreshToken = refreshToken;
-    token.user = admin;
+    token.user = cachedAdmin;
     return {
       status: 200,
       message: "Sign in Successfull!",
